@@ -1,0 +1,45 @@
+.jumbotron {
+  /*padding-top: 3rem;
+  padding-bottom: 3rem;
+  margin-bottom: 0;*/
+
+   background: url("../images/customer.avif");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+@media (min-width: 768px) {
+  .jumbotron {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+}
+
+.jumbotron p:last-child {
+  margin-bottom: 0;
+}
+
+.jumbotron h1 {
+  font-weight: 300;
+  color: #fff;
+
+}
+
+.jumbotron .container {
+  max-width: 40rem;
+  
+}
+
+.jumbotron .container .lead {
+  color: #fff;
+}
+
+footer {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+footer p {
+  margin-bottom: .25rem;
+}
