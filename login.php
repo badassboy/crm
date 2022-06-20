@@ -121,21 +121,12 @@ button {
   <input type="text" name="username"   class="form-control" placeholder="Username or Email" required autofocus>
 
 
- <!--  <label for="inputEmail" class="sr-only">Email address</label>
-  <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
- -->
+ 
   <label for="inputPassword" class="sr-only">Password</label>
   <input type="password" name="pwd" id="inputPassword" class="form-control" placeholder="Password" required>
 
-  
-
- <!--  <div class="checkbox mb-3">
-    <label>
-      <input type="checkbox" value="remember-me"> Remember me
-    </label>
-  </div> -->
-
   <button class="btn btn-primary" type="submit" name="register">Login</button>
+  <p>Forget Password? <a href="forget_password.php">Click Here</a></p>
   <p>Not Registered? <a href="signup.php">SignUp</a></p>
 </form>
 	</div>

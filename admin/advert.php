@@ -290,6 +290,8 @@ $.ajax({
 
          var action = edit.concat(" ", my_delete);
 
+         var id = response[i]["id"];
+
          var title = response[i]["title"];
 
          var venue = response[i]["venue"];

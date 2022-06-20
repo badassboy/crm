@@ -1,4 +1,4 @@
-<?php  
+<?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -11,21 +11,20 @@ class Business{
 
 		$data = trim($data);
 
-        $data = stripslashes($data);
+		$data = stripslashes($data);
 
-        $data = htmlspecialchars($data);
+		$data = htmlspecialchars($data);
 
-        return $data;
+		return $data;
 	}
 
 	public function registerAdmin($email,$username,$password,$password2)
 	{
 
-
-
 		$dbh = DB();
 
 		$validated_email = filter_var($email,FILTER_SANITIZE_EMAIL);
+		$current_date = date("Y-m-d");
 		
 
 		if (strlen($password)<6) {
@@ -40,8 +39,8 @@ class Business{
 		else{
 			$verified = "No";
 			$hashed = password_hash($password,PASSWORD_BCRYPT);
-			$stmt = $dbh->prepare("INSERT INTO admin(email,username,password,verified) VALUES(?,?,?,?)");
-			$stmt->execute([$validated_email,$username,$hashed,$verified]);
+			$stmt = $dbh->prepare("INSERT INTO admin(email,username,password,verified,register_date) VALUES(?,?,?,?,?)");
+			$stmt->execute([$validated_email,$username,$hashed,$verified,$current_date]);
 			$inserted = $stmt->rowCount();
 			if ($inserted>0) {
 				return true;
@@ -49,16 +48,27 @@ class Business{
 				return $dbh->errorInfo();
 			}
 		}
-}
+	}
 
-	
-	
-		
-
-public function loginAdmin($userInput,$password)
-{
+	public function getUserDate($user)
+	{
 		$dbh = DB();
-	$stmt = $dbh->prepare("SELECT id,username,email,password FROM admin WHERE username=:input or email=:input");
+		$stmt = $dbh->prepare("SELECT register_date FROM admin WHERE username =?");
+		$stmt->execute([$user]);
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $data;
+	}
+
+
+
+	
+	
+
+
+	public function loginAdmin($userInput,$password)
+	{
+		$dbh = DB();
+		$stmt = $dbh->prepare("SELECT id,username,email,password,verified FROM admin WHERE username=:input or email=:input");
 
 		$stmt->execute(["input" => $userInput]);
 		$data = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -82,39 +92,35 @@ public function loginAdmin($userInput,$password)
 		$dbh = DB();
 
 			// validate email
-			
-				try{
+
+		try{
 
 					// checking if user email already exist in the  system
-					$stmt = $dbh->prepare("SELECT * FROM admin  WHERE email = ?");
-					$stmt->execute([$email]);
-					while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
-						$id = $data['id'];
+			$stmt = $dbh->prepare("SELECT * FROM admin  WHERE email = ?");
+			$stmt->execute([$email]);
+			while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				$id = $data['id'];
 
 
 						// Send email to user with the token in a link they can click on
-							$to = $email;
-							
-							$subject = "Account Activation";
-							
-						// $msg = "Hi there, click on below link to reset your password<br> <a href=\"new_password.php?token=" . $token . "\">link</a>";
+				$to = $email;
 
-		$msg = "Click <a href='www.xsoftgh.com/booking/admin/activate.php?id=$id'>here</a> to activate your account";
-									
-							   
+				$subject = "Account Activation";
 
-		  
-		   	$headers[] = 'MIME-Version: 1.0';
-		   	$headers[] = 'Content-type: text/html; charset=iso-8859-1';
 
-		   
-		   $email_sent = mail($to, $subject, $msg, implode("\r\n", $headers));
-		   if ($email_sent) {
-		   		return true;
-		   }else {
-		   	return false;
-		   }
-	
+
+				$msg = "Click <a href='https://online.lemonfirmbank.com/admin/activate.php?id=$id'>here</a> to activate your account";
+
+				$headers[] = 'MIME-Version: 1.0';
+				$headers[] = 'Content-type: text/html; charset=iso-8859-1';
+
+				$email_sent = mail($to, $subject, $msg, implode("\r\n", $headers));
+				if ($email_sent) {
+					return true;
+				}else {
+					return false;
+				}
+
 
 
 			}
@@ -123,10 +129,84 @@ public function loginAdmin($userInput,$password)
 		}
 	}
 
+	public function sendForgetEmail($email)
+	{
+
+		$dbh = DB();
+		$validated_email = filter_var($email,FILTER_VALIDATE_EMAIL);
+		if ($validated_email) {
+
+			try{
+
+					// checking if user email already exist in the  system
+				$stmt = $dbh->prepare("SELECT * FROM admin  WHERE email = ?");
+				$stmt->execute([$validated_email]);
+				while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
+					$id = $data['id'];
+
+
+						// Send email to user with the token in a link they can click on
+					$to = $validated_email;
+
+					$subject = "Password Reset Email";
+
+					$msg = "Click <a href='reset_email.php?id=$id'>here</a> to activate your account";
+
+					$headers[] = 'MIME-Version: 1.0';
+					$headers[] = 'Content-type: text/html; charset=iso-8859-1';
+
+					$email_sent = mail($to, $subject, $msg, implode("\r\n", $headers));
+					if ($email_sent) {
+						return true;
+					}else {
+						return false;
+					}
+
+
+
+				}
+			}catch(ErrorException $ex){
+				echo "Message: ".$ex->getMessage();
+			}
+
+			
+		}else {
+			echo '<div class="alert alert-danger" role="alert">Invalid Email</div>';
+		}
+
+	}
+
+	public function ResetUserPassword($id,$password,$password2)
+	{
+
+		$dbh = DB();
+		if ($password != $password2) {
+			echo '<div class="alert alert-danger" role="alert">Password does not match</div>';
+		}else if (strlen($password)<6) {
+			echo '<div class="alert alert-danger" role="alert">Password too short</div>';
+			
+		}else {
+
+			$hashed_password = password_hash($password,PASSWORD_BCRYPT);
+
+			$stmt = $dbh->prepare("UPDATE admin SET password =? WHERE id = ?");
+			$stmt->execute([$hashed_password,$id]);
+			$data = $stmt->rowCount();
+			if ($data>0) {
+				return true;
+			}else {
+				return false;
+			}
+
+		}
+		
+
+	}
+
 	public function confirmEmail($id)
 	{
 		$dbh = DB();
-		$stmt = $db->prepare("SELECT * FROM admin WHERE id = ?");
+		$stmt = $dbh->prepare("SELECT * FROM admin WHERE id = ?");
 		$stmt->execute([$id]);
 		$user = $stmt->fetch(PDO::FETCH_ASSOC);
 		if ($user) {
@@ -148,6 +228,29 @@ public function loginAdmin($userInput,$password)
 		
 	}
 
+	public function welcomeMessage($email)
+	{
+		$to = $email;
+
+		$subject = "Getting Started with Cloudsoft CRM";
+
+		$msg = "Dear User, Thanks for signing up and we glad to have you aboard.<br>
+		Over the next 15 days, you'll get to evaluate Zoho CRM and all of its features. Whether you're looking to organize your data in a centralized place, automate aspects of your business process, or you're simply ready to make a move to the cloud, we're excited to start this journey with you.
+		<br> Thank you. Whatsapp: +233545804166";
+
+		$headers[] = 'From:No reply';
+		$headers[] = 'MIME-Version: 1.0';
+		$headers[] = 'Content-type: text/html; charset=iso-8859-1';
+
+		$email_sent = mail($to, $subject, $msg, implode("\r\n", $headers));
+		if ($email_sent) {
+			return true;
+		}else {
+			return false;
+		}
+
+	}
+
 
 	public function Advert($title,$venue,$file_name,$amount,$days)
 	{
@@ -165,7 +268,7 @@ public function loginAdmin($userInput,$password)
 		$extensions= array("jpeg","jpg","png","gif");
 
 		if(in_array($file_ext,$extensions) === false){
-		$errors[]="extension not allowed, please choose a JPEG or PNG file.";
+			$errors[]="extension not allowed, please choose a JPEG or PNG file.";
 		}
 
 		// check if image already exist
@@ -175,7 +278,7 @@ public function loginAdmin($userInput,$password)
 
 		// check for 2mb file
 		if($file_size > 4097152) {
-		$errors[]='File size must be exactly 2MB';
+			$errors[]='File size must be exactly 2MB';
 		}
 
 
@@ -381,13 +484,13 @@ public function loginAdmin($userInput,$password)
 			$hashed = password_hash($new_password,PASSWORD_BCRYPT);
 
 			$stmt = $db->prepare("UPDATE admin SET password = ? WHERE username =?");
-		$stmt->execute([$hashed,$info]);
-		$data = $stmt->rowCount();
-		if ($data>0) {
-			return true;
-		}else {
-			return false;
-		}
+			$stmt->execute([$hashed,$info]);
+			$data = $stmt->rowCount();
+			if ($data>0) {
+				return true;
+			}else {
+				return false;
+			}
 
 		}
 	}
@@ -406,21 +509,135 @@ public function loginAdmin($userInput,$password)
 	}
 
 	// inventory
-	public function addItem($itemNumber,$itemName,$quantity,$price,$stock,$discount,$description)
+	public function addItem($itemNumber,$itemName,$status,$quantity,$price,$stock,$discount,
+		$description)
 	{
 		$dbh = DB();
 		$itemID = rand();
-		$stmt = $dbh->prepare("INSERT INTO item(itemNumber,itemName,quantity,price,stock,discount,description,itemID) VALUES(?,?,?,?,?,?,?,?)");
-		$stmt->execute([$itemNumber,$itemName,$quantity,$price,$stock,$discount,$description,$itemID]);
-		$inserted = $stmt->rowCount();
-		if($inserted>0){
-			return true;
-		}else {
-			return false;
+
+		
+
+	$stmt = $dbh->prepare("INSERT INTO item(itemNumber,itemName,status,quantity,price,stock,discount,description,itemID) VALUES(?,?,?,?,?,?,?,?,?)");
+	$stmt->execute([$itemNumber,$itemName,$status,$quantity,$price,$stock,$discount,$description,$itemID]);
+	$inserted = $stmt->rowCount();
+	if($inserted>0){
+		return true;
+	}else {
+		return false;
+	}
+
+}
+
+		// Suppliers
+		public function addSupplier($name,$address,$email,$contact,$current_date)
+		{
+
+			$dbh = DB();
+			$stmt = $dbh->prepare("INSERT INTO suppliers(name,address,email,contact,sup_date)
+				VALUES(?,?,?,?,?)");
+			$stmt->execute([$name,$address,$email,$contact,$current_date]);
+			$data = $stmt->rowCount();
+			if ($data>0) {
+				return true;
+			}else {
+				return false;
+			}
 		}
 
+		public function getSuppliers()
+		{	
+			$dbh = DB();
+			$stmt = $dbh->prepare("SELECT * FROM suppliers");
+			$stmt->execute();
+			$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			return $data;
+			
+
+		}
+
+		public function deleteSupplier($id)
+		{
+			$dbh = DB();
+			$stmt = $dbh->prepare("DELETE FROM suppliers WHERE id = ?");
+			$stmt->execute([$id]);
+			$data = $stmt->rowCount();
+			if ($data>0) {
+				return true;
+			}else {
+				return false;
+			}
+		}
+		// Suppliers
+
+		// Categories
+		public function addCategory($catCode,$catName,$catDesc,$current_date)
+		{
+
+			$dbh = DB();
+			$stmt = $dbh->prepare("INSERT INTO categories(cat_code,cat_name,cat_desc,cat_date)
+				VALUES(?,?,?,?)");
+			$stmt->execute([$catCode,$catName,$catDesc,$current_date]);
+			$data = $stmt->rowCount();
+			if ($data>0) {
+				return true;
+			}else {
+				return false;
+			}
+		}
+
+		public function getCategories()
+		{	
+			$dbh = DB();
+			$stmt = $dbh->prepare("SELECT * FROM categories");
+			$stmt->execute();
+			$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			return $data;
+			
+
+		}
+
+		// public function deleteSupplier($id)
+		// {
+		// 	$dbh = DB();
+		// 	$stmt = $dbh->prepare("DELETE FROM suppliers WHERE id = ?");
+		// 	$stmt->execute([$id]);
+		// 	$data = $stmt->rowCount();
+		// 	if ($data>0) {
+		// 		return true;
+		// 	}else {
+		// 		return false;
+		// 	}
+		// }
+
+
+	public function getItems()
+	{
+		$dbh = DB();
+		$stmt = $dbh->prepare("SELECT * FROM item");
+		$stmt->execute();
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $data;
+		
 
 	}
+
+
+	public function getSortedItem()
+	{
+		$dbh = DB();
+		$stmt = $dbh->prepare("SELECT * FROM item LIMIT 1");
+		$stmt->execute();
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $data;
+
+	}
+
+	
+	
+
+	
+
+
 
 
 	public function purchase($itemNumber,$itemName,$quantity,$price,$purchaseDate,$vendor,$currentStock)
@@ -436,6 +653,16 @@ public function loginAdmin($userInput,$password)
 		}else {
 			return false;
 		}
+
+	}
+
+	public function getPurchase()
+	{
+		$dbh = DB();
+		$stmt = $dbh->prepare("SELECT * FROM purchase");
+		$stmt->execute();
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $data;
 
 	}
 
@@ -455,31 +682,40 @@ public function loginAdmin($userInput,$password)
 	}
 
 
-	public function sales($itemNumber,$itemName,$quantity,$price,$salesDate,$customerName,
-		$customerID)
+	public function sales($itemName,$discount,$quantity,$price,$salesDate,$salesCost)
 	{
 		$dbh = DB();
 		$saleID = rand();
-		$stmt = $dbh->prepare("INSERT INTO sales(itemNumber,itemName,quantity,price,salesDate,customerName,customerID,saleID) VALUES(?,?,?,?,?,?,?,?)");
-		$stmt->execute([$itemNumber,$itemName,$quantity,$price,$salesDate,$customerName,
-		$customerID,$saleID]);
+		$stmt = $dbh->prepare("INSERT INTO sales(itemName,discount,quantity,price,salesDate,sales_cost,saleID) VALUES(?,?,?,?,?,?,?)");
+		$stmt->execute([$itemName,$discount,$quantity,$price,$salesDate,$salesCost,$saleID]);
 		$inserted = $stmt->rowCount();
 		if($inserted>0){
 			return true;
 		}else {
 			return false;
 		}
-
-
 	}
 
+	
 
-	public function customer($fullName,$phone,$email,$address,$city,$vendor_date)
+	public function getSales()
+	{
+		$dbh = DB();
+		$stmt = $dbh->prepare("SELECT * FROM sales");
+		$stmt->execute();
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $data;
+	} 
+
+
+
+
+	public function customer($fullName,$status,$phone,$email,$address,$city,$vendor_date)
 	{
 		$dbh = DB();
 		$custID = rand();
-		$stmt = $dbh->prepare("INSERT INTO customer(fullName,phone,email,address,city,cust_date,customerID) VALUES(?,?,?,?,?,?,?)");
-		$stmt->execute([$fullName,$phone,$email,$address,$city,$vendor_date,$custID]);
+		$stmt = $dbh->prepare("INSERT INTO customer(fullName,status,phone,email,address,city,cust_date,customerID) VALUES(?,?,?,?,?,?,?,?)");
+		$stmt->execute([$fullName,$status,$phone,$email,$address,$city,$vendor_date,$custID]);
 		$inserted = $stmt->rowCount();
 		if($inserted>0){
 			return true;
@@ -487,6 +723,15 @@ public function loginAdmin($userInput,$password)
 			return false;
 		}
 
+	}
+
+	public function getCustomers()
+	{
+		$dbh = DB();
+		$stmt = $dbh->prepare("SELECT * FROM customer");
+		$stmt->execute();
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $data;
 	}
 
 	public function itemReport()
@@ -538,7 +783,7 @@ public function loginAdmin($userInput,$password)
 		$dbh = DB();
 		$stmt = $dbh->prepare("INSERT INTO deals(dealName,contactName,dealType,deal_source,amount,closing_date,revenue,description) VALUES(?,?,?,?,?,?,?,?)");
 		$stmt->execute([$dealName,$contactName,$dealType,$deal_source,$amount,$closing_date,
-		$revenue,$description]);
+			$revenue,$description]);
 		$data = $stmt->rowCount();
 		if ($data>0) {
 			return true;
@@ -656,7 +901,69 @@ public function loginAdmin($userInput,$password)
 	}
 
 
-		
+	// standard Upgrade
+	public function addService($service,$rate,$description)
+	{
+		$dbh = DB();
+		$stmt = $dbh->prepare("INSERT INTO service(name,rate,description) VALUES(?,?,?)");
+		$stmt->execute([$service,$rate,$description]);
+		$data = $stmt->rowCount();
+		if ($data>0) {
+			return true;
+		}else {
+			return false;
+		}
+
+	}
+
+	public function getServices()
+	{
+		$dbh = DB();
+		$stmt = $dbh->prepare("SELECT name FROM service");
+		$stmt->execute();
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $data;
+	}
+
+
+
+	public function addOrders($order_date,$client,$mobile,$service,$rate,$paidAmount,$dueAmount,
+		$paymentType,$status,$place)
+	{
+		$dbh = DB();
+
+		$stmt = $dbh->prepare("INSERT INTO service_orders(order_date,client,mobile,service,rate,paidAmount,dueAmount,paymentType,status,place) VALUES(?,?,?,?,?,?,?,?,?,?)");
+
+		$stmt->execute([$order_date,$client,$mobile,$service,$rate,$paidAmount,$dueAmount,
+		$paymentType,$status,$place]);
+
+		$data = $stmt->rowCount();
+
+		if ($data>0) {
+		  return true;
+		}else {
+			return false;
+		}
+
+	}
+
+
+
+	public function manageOrders($id)
+	{
+		$dbh = DB();
+		$stmt = $dbh->prepare("SELECT * FROM service_orders WHERE id =?");
+		$stmt->execute([$id]);
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $data;
+
+	}
+	// standard Upgrade
+
+
+
+
+
 
 
 

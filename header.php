@@ -66,7 +66,7 @@
     <div class="container d-flex justify-content-between">
       <a href="#" class="navbar-brand d-flex align-items-center">
        <!--  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="mr-2" viewBox="0 0 24 24" focusable="false"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg> -->
-        <strong>Freeto</strong>
+        <strong>CloudsoftCRM</strong>
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -79,8 +79,8 @@
 
   <section class="jumbotron text-center">
     <div class="container">
-      <h1>Complete CRM Platform</h1>
-      <p class="lead">Get started with our free tools or get more with our premium software</p>
+      <h1>CRM for business and all industries</h1>
+      <p class="lead">Cloudsoft CRM powers a global over 10000+ businesses in 180 countries to convert more leads, engage with customers, and grow their revenue. Grow your business with the ultimate standard in customer relationship management software</p>
       <p>
         <a href="login.php" class="btn btn-primary">Login</a>
         <a href="signup.php" class="btn btn-primary">SignUp</a>

@@ -43,3 +43,57 @@ footer {
 footer p {
   margin-bottom: .25rem;
 }
+/*features*/
+.features {
+  margin-top: 3%;
+}
+
+.features h3 {
+  padding-bottom: 2%;
+}
+/*features*/
+
+.intro{
+  font-size: 17px;
+  color:#404040;
+}
+
+/*connect*/
+.connect {
+  background-color:#FD5D14;
+  height: 200px;
+}
+
+.connect h2 {
+  padding-top: 3%;
+  padding-left: 12%;
+}
+
+.myList {
+  margin-top: 4%;
+  
+}
+
+.myList li{
+  font-size: 17px;
+  color:#000000;
+}
+/*connect*/
+
+/*notice*/
+.notice h4 {
+  color: #FD5D14;
+  padding-top: 2%;
+
+}
+.notice {
+  background-color:#000000;
+  height: 150px;
+}
+
+.btn-default {
+  margin-left: 40%;
+  background-color: #fff;
+  color: #000000;
+}
+/*notice*/

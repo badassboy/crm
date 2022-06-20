@@ -1,0 +1,132 @@
+ *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .appointment{
+                background-color:rgb(255, 255, 255);
+                height: 500px;
+                padding-top: 3%;
+                display: none;
+            }
+
+        .event{
+                background-color:rgb(255, 255, 255);
+                height: 500px;
+                padding-top: 3%;
+                display: none;
+            }
+
+            .purchase{
+
+                background-color:rgb(255, 255, 255);
+                height: 500px;
+                padding-top: 3%;
+                display: none;
+
+            }
+
+           /* .vendor{
+                background-color:rgb(255, 255, 255);
+                height: 500px;
+                padding-top: 3%;
+                display: none;
+            }*/
+
+             .sales{
+                background-color:rgb(255, 255, 255);
+                height: 500px;
+                padding-top: 3%;
+                display: none;
+            }
+
+             .customer{
+                background-color:rgb(255, 255, 255);
+                height: 500px;
+                padding-top: 3%;
+                display: none;
+            }
+
+             .supplier{
+
+                background-color:rgb(255, 255, 255);
+                height: 500px;
+                padding-top: 3%;
+                display: none;
+            }
+
+            .category{
+
+                background-color:rgb(255, 255, 255);
+                height: 500px;
+                padding-top: 3%;
+                display: none;
+            }
+
+            .sreturns{
+
+                background-color:rgb(255, 255, 255);
+                height: 500px;
+                padding-top: 3%;
+                display: none;
+            }
+
+            .preturns{
+
+                background-color:rgb(255, 255, 255);
+                height: 500px;
+                padding-top: 3%;
+                display: none;
+            }
+
+
+
+
+
+       /* .counselling{
+
+            background-color:rgb(255, 255, 255);
+            height: 350px;
+            padding-top: 3%;
+            display: none;
+        }*/
+
+        .show {
+          display: block;
+        }
+
+        .form-group .control-label:after{
+           content: " *";
+          color: red;
+          font-weight: 100;
+          font-size: 20px;
+        }
+
+
+        
+
+        .tab-cont >div{
+        display: none;
+        }
+
+        .tab-cont >div.selected{
+          display: block;
+          
+          
+        }
+
+     
+
+        form button[type="submit"]
+        {
+           
+            float: left;
+            margin: 1% 1%;
+        }
+
+        
+
+
+
+       

@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	if (!empty($username) || !empty($pwd)) {
 
 		$user = $ch->loginAdmin($username,$pwd);
-		if ($user AND $user['verified'] == "yes") {
+		if ($user) {
 			$_SESSION['username']=$username;
 			header("Location: homepage.php");
 			// return;
@@ -28,8 +28,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 		$info = '<div class="alert alert-danger" role="alert">Fields required</div>';;	
 		
-		
-
 	}
 }
 
@@ -69,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			<h3>LOGIN HERE</h3>
 			    <div class="second">
 			    	
-			    	<form method="post" action="index.php">
+			    	<form method="post">
 			    		<?php
 
 			    		if (isset($info)) {

@@ -1,3 +1,4 @@
+<?php include("top-bar.php"); ?>
 <?php include("header.php"); ?>
 
   <div class="album py-5 bg-light">
@@ -5,17 +6,15 @@
 
       <h3 class="text-center">CRM Platform For All Your Business Needs</h3>
       <p class="text-center">
-      <small>HubSpot’s CRM platform has all the tools and integrations you need for marketing, sales, content management, and customer service. Each product in the platform is powerful alone, but the real magic happens when you use them together.</small>
+      <p class="intro text-center">CloudsoftCRM CRM platform has all the tools and integrations you need for marketing, sales, content<br> management, and customer service. Each product in the platform is powerful alone, but the real magic<br> happens when you use them together.</p>
    </p>
+ </div>
 
 
+    <div class="container features">
+          <h3 class="text-center">Our Awesome features</h3>
 
-      <div class="row">
-
-       
-
-        
-
+           <div class="row">
         <div class="col-md-4">
          <div class="card" style="width: 18rem;">
            <div class="card-body">
@@ -99,20 +98,51 @@
         </div>
 
 
-       
-       
-       
+</div>
+          
+        </div>
 
-       
-
-      
-
-
-      </div>
-    </div>
+     
+<!-- end of row -->
+    
   </div>
 
+
+
 </main>
+
+<div class="container-fluid connect">
+
+  <div class="row">
+
+    <div class="col-6">
+      <h2>Connect with customers<br> everywhere they are</h2>
+    </div>
+
+    <div class="col-6">
+      <ul class="myList">
+         <li>Reach customers across every channel: telephone, email, live chat, and social media</li>
+  <li>Get real-time notifications when customers interact with your business</li>
+  <li>Measure the effectiveness of your customer communication and find the best time and channel to reach out to your customers
+</li>
+      </ul>
+    </div>
+    
+  </div>
+
+  
+
+  
+  
+</div>
+
+<div class="container-fluid notice">
+  <h4 class="text-center">Join 1000+ businesses who manage their business<br> data easily with CloudsoftCRM</h4>
+  <button type="button" class="btn-default"><a href="signup.php">SIGN UP FOR FREE</a></button>
+  
+</div>
+
+
 
 <?php include("footer.php"); ?>
 

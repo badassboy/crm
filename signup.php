@@ -10,9 +10,6 @@ $msg = "";
 
 if (isset($_POST['signup'])) {
 
-
-	
-	// $email = trim($_POST['email']);
 	$username = htmlspecialchars($_POST['username']);
 	$email = htmlspecialchars($_POST['email']);
 	$password = htmlspecialchars($_POST['password']);
@@ -21,30 +18,19 @@ if (isset($_POST['signup'])) {
 
 	if (!empty($username) || !empty($email)  || !empty($password) || !empty($password2)) {
 
-		
+		$admin_id = $ch->registerAdmin($email,$username,$password,$password2);
 
-			$admin_id = $ch->registerAdmin($email,$username,$password,$password2);
-
-			
-
-			if ($admin_id==1) {
+		if ($admin_id==1) {
 
 	$msg = '<div class="alert alert-success" role="alert">Registration successful.Check your email to activate your account</div>';
 
 			$ch->sendEmail($email);
+      $ch->welcomeMessage($email);
 
-				
-
-
-
-			}else{
+		}else{
 				$msg = '<div class="alert alert-danger" role="alert">Error in creating account</div>';
 				// print_r($adminSignUp);
 			}
-
-		
-
-		
 
 	}else {
 		$msg = "field are required";
@@ -73,19 +59,22 @@ if (isset($_POST['signup'])) {
 
       .signup {
       	background-color:#f5f5f5;
-      	height: 500px;
-      	/*margin-top: 10%;*/
+      	height: 600px;
+        position: relative;
+       
+      	
       }
 
       .form-signin {
   width: 100%;
   max-width: 330px;
   padding: 15px;
-  margin: auto;
+  margin-left: 10%;
 }
 
-.form-signin h1 {
+.form-signin h3 {
 	margin-top: 15%;
+  font-size: 17px;
 }
 .form-signin .checkbox {
   font-weight: 400;
@@ -125,22 +114,61 @@ button {
   border-top-right-radius: 0;
 }
       /*page*/
+
+      .second {
+        background-color:#ff751a;
+        height: 500px;
+      }
+
+      .inner {
+        background-color: white;
+        height: 500px;
+        position: absolute;
+        top: 10%;
+        margin-left: 5%;
+
+        /*width: 100%;*/
+
+        }
+
+      .first {
+        background-color:white;
+        height: 500px;
+      }
+
+      .card {
+        margin-top: 10%;
+        height: 400px;
+      }
+
+      .card-text {
+        font-size: 25px;
+      }
+
     </style>
 
 
 <body>
 
 	<div class="container-fluid signup">
-		<?php 
 
-		if (isset($msg)) {
-			echo $msg;
-		}
+    <div class="container inner">
+      
+    
+
+    <div class="row">
+
+       <div class="col-6 first">
+         <?php 
+
+    if (isset($msg)) {
+      echo $msg;
+    }
 
 
-		?>
-		<form class="form-signin" method="post">
-  <h1 class="h3 mb-3 font-weight-normal">Register Here</h1>
+    ?>
+    <form class="form-signin" method="post">
+  <h3 class="h3 mb-3 font-weight-normal">Register Here</h3>
 
    <label for="inputEmail" class="sr-only">Username</label>
   <input type="text" name="username"  class="form-control" placeholder="Username" required autofocus>
@@ -164,7 +192,30 @@ button {
   <button class="btn btn-primary" type="submit" name="signup">Sign Up</button>
   <p>Already Registered? <a href="login.php">Login</a></p>
 </form>
+       </div>
+
+    <div class="col-6 second">
+
+     <div class="card bg-dark text-white">
+  <img src="images/backgound.jpg" class="card-img" alt="" height="400">
+  <div class="card-img-overlay">
+    <h5 class="card-title text-white">NEW FEATURE</h5>
+    <p class="card-text">Service based companies can now manage their business data on this platform easily.Experience the new wave of your service business activities</p>
+    <a href="announcement.php" class="btn btn-primary">Read More</a>
+  </div>
+</div>
+      
+    </div>
+
+    </div>
+    <!-- end of row -->
+
+</div>
+    <!-- inner div -->
+
+		
 	</div>
+  <!-- overall div -->
 
 	
 

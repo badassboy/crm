@@ -1,6 +1,32 @@
 <?php
-
+include("../functions.php");
+$busy = new Business();
 session_start();
+
+if (isset($_SESSION['username'])) {
+
+  $user = $_SESSION['username'];
+
+  // get registered users date
+  $users_date = $busy->getUserdate($user);
+  foreach ($users_date as $row) {
+
+    // calculate next day from current date
+  if ($row['register_date'] == Date('y:m:d', strtotime('+1 day'))) {
+    echo true;
+  }else {
+    echo false;
+  }
+
+
+
+
+    }
+}
+
+
+
+
 
 ?>
 
@@ -111,7 +137,7 @@ session_start();
           </button>
 
           <!-- Topbar Search -->
-          <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+          <!-- <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
             <div class="input-group">
               <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
               <div class="input-group-append">
@@ -120,7 +146,7 @@ session_start();
                 </button>
               </div>
             </div>
-          </form>
+          </form> -->
 
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">
@@ -292,7 +318,7 @@ session_start();
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">ADMIN DASHBOARD</h1>
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+          <!--   <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> -->
           </div>
 
           <!-- Content Row -->
@@ -310,14 +336,7 @@ session_start();
             
 
 
-           
-
-           
-
-
-
-
-          </div>
+           </div>
           <!-- Content Row 1 end -->
 
 
@@ -524,13 +543,7 @@ session_start();
             </div>
 
 
-           
-
-          
-
-           
-
-          </div>
+        </div>
           <!-- Fourth Row-->
 
 
