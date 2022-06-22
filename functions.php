@@ -422,7 +422,8 @@ class Business{
 		return $data;
 	}
 
-	public function editInvoice($id,$firstName,$lastName,$phone,$email,$invoice_date,$travel_country,$travel_purpose,$next_of_kin,$deposit,$balance,$note){
+	public function editInvoice($id,$firstName,$lastName,$phone,$email,$invoice_date,$travel_country,$travel_purpose,$next_of_kin,$deposit,$balance,$note)
+	{
 		
 	}
 
@@ -707,6 +708,22 @@ class Business{
 		return $data;
 	} 
 
+	// sales Returns
+	public function salesReturns($customer,$product,$quantity,$payment_method,$current_date)
+	{
+		
+		$dbh = DB();
+		$stmt = $dbh->prepare("INSERT INTO sales_returns(customer,product,quantity,payment_method,return_date) VALUES(?,?,?,?,?)");
+		$stmt->execute([$customer,$product,$quantity,$payment_method,$current_date]);
+		$inserted = $stmt->rowCount();
+		if($inserted>0){
+			return true;
+		}else {
+			return false;
+		}
+
+	}
+
 
 
 
@@ -770,11 +787,7 @@ class Business{
 			return false;
 		}
 	}
-
-
-
-
-
+	
 
 	//deals
 	public function deals($dealName,$contactName,$dealType,$deal_source,$amount,$closing_date,

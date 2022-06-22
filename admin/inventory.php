@@ -786,7 +786,7 @@ if(isset($_POST['customer'])){
 
             <!-- sales returns -->
              <div class="container sreturns" id="eight">
-              <?php include("supplysection.php"); ?>
+              <?php include("salesReturns.php"); ?>
 
               <table class="table">
             <thead>
@@ -1077,6 +1077,29 @@ if(isset($_POST['customer'])){
           })
           .fail(function(data){
             $("#response").html(data);
+            // console.log("failed");
+
+          });
+
+        });
+
+        // sales returns ajax
+        $("#salesReturns").on("submit",function(e){
+          e.preventDefault();
+          $.ajax({
+            type:"post",
+            url:"processSalesReturns.php",
+            data:$("#salesReturns").serialize(),
+          })
+
+          .done(function(data){
+            $("#test").html(data);
+            // alert("success");
+            // console.log("success");
+          })
+          .fail(function(data){
+            // alert("failed");
+            $("#test").html(data);
             // console.log("failed");
 
           });
