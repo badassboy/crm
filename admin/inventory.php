@@ -160,6 +160,8 @@ if(isset($_POST['customer'])){
 
     <!-- Font Awesome -->
     <link rel="stylesheet" type="text/css" href="../font-awesome/css/font-awesome.css">
+
+    
     
 
 
@@ -827,7 +829,7 @@ if(isset($_POST['customer'])){
 
             <!-- purchase returns -->
              <div class="container preturns" id="nine">
-              <?php include("supplysection.php"); ?>
+              <?php include("purchaseReturns.php"); ?>
 
               <table class="table">
             <thead>
@@ -969,12 +971,11 @@ if(isset($_POST['customer'])){
                 
 <!-- jQuery CDN  -->
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-   <!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
+   
 
     <script type="text/javascript" src="inventory.js"></script>
       
-   
-    <!-- Bootstrap JS -->
+   <!-- Bootstrap JS -->
    <script type="text/javascript" src="bootstrap/dist/js/bootstrap.js"></script>
 
    
@@ -1105,6 +1106,32 @@ if(isset($_POST['customer'])){
           });
 
         });
+
+        // purchase returns.
+        $("#purchaseReturns").on("submit",function(e){
+          e.preventDefault();
+          $.ajax({
+            type:"post",
+            url:"processPurchaseReturns.php",
+            data:$("#purchaseReturns").serialize(),
+          })
+
+          .done(function(data){
+            $("#test").html(data);
+            // alert("success");
+            // console.log("success");
+          })
+          .fail(function(data){
+            // alert("failed");
+            $("#test").html(data);
+            // console.log("failed");
+
+          });
+
+        });
+
+
+
 
        
   </script>

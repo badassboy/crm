@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
 
-	 <!-- Google Web Fonts -->
+   <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
@@ -20,6 +20,10 @@
      <style>
       .top {
         height: 50px;
+      }
+      
+      #announce{
+          margin-left:5%;
       }
 
       .new{
@@ -47,10 +51,7 @@
 
 <div class="top">
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <p class="new">Launched 2022! New features are live<span>
-      <a href="announcement.php"><button class="btn btn-primary">Read More</button></a>
-    </span>
-  </p>
+    <a href="announcement.php" class="btn btn-primary" id="announce">AVAILABLE NEW FEATURES</a>
 </nav>
 </div>
   

@@ -724,6 +724,23 @@ class Business{
 
 	}
 
+	//purchase returns
+	public function purchaseReturns($customer,$product,$quantity,$return_status,$current_date)
+	{
+		
+		$dbh = DB();
+		$stmt = $dbh->prepare("INSERT INTO purchase_returns(customer,product,quantity,return_status,return_date) VALUES(?,?,?,?,?)");
+		$stmt->execute([$customer,$product,$quantity,$return_status,$current_date]);
+		$inserted = $stmt->rowCount();
+		if($inserted>0){
+			return true;
+		}else {
+			return false;
+		}
+
+	}
+
+
 
 
 
