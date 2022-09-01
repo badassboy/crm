@@ -4,22 +4,26 @@ include("../functions.php");
 $ch = new Business();
 
 if(isset($_POST['laliga'])){
+
     // customer data
-    $firstName = htmlspecialchars($_POST['first_name']);
-    $lastName = htmlspecialchars($_POST['last_name']);
-    $email = htmlspecialchars($_POST['email']);
-    $phone = htmlspecialchars($_POST['phone']);
+    $invoice_number = $ch->testInput($_POST['invoice_number']);
+    $customer = $ch->testInput($_POST['customer']);
+    $item = $ch->testInput($_POST['item']);
+    $invoice_date = $ch->testInput($_POST['invoice_date']);
+    $payment_due = $ch->testInput($_POST['payment_due']);
+    $validity = $ch->testInput($_POST['validity']);
 
-    $invoiceDate = htmlspecialchars($_POST['invoice_date']);
-    $travel_country = htmlspecialchars($_POST['travel_country']);
-    $travel_purpose = htmlspecialchars($_POST['travel_purpose']);
-    $next_of_kin = htmlspecialchars($_POST['kin']);
-    $deposit = htmlspecialchars($_POST['deposit']);
-    $balance = htmlspecialchars($_POST['balance']);
-    $note = htmlspecialchars($_POST['note']);
+    $amount = $ch->testInput($_POST['amount']);
+    $totalAmount = $ch->testInput($_POST['total_amount']);
+    
+   
+    $balance = $ch->testInput($_POST['balance']);
+    $invoice_status = $ch->testInput($_POST['invoice_status']);
+    $note = $ch->testInput($_POST['note']);
 
 
-    $laliga = $ch->createInvoice($firstName,$lastName,$phone,$email,$invoiceDate,$travel_country,$travel_country,$next_of_kin,$deposit,$balance,$note);
+    $laliga = $ch->createInvoice($invoice_number,$customer,$item,$invoice_date,$payment_due,$validity,
+        $amount,$totalAmount,$balance,$invoice_status,$note);
     if($laliga){
       $msg = '<div class="alert alert-success" role="alert">Invoice Created</div>';
     }else {
@@ -107,6 +111,11 @@ if (isset($_POST['send'])) {
           display: block;
         }
 
+        .form-group  .control-label:after {
+            content:"*";
+            color:red;
+        }
+
 
     </style>
     
@@ -178,35 +187,52 @@ if (isset($_POST['send'])) {
                 <div class="row">
 
                     <div class="col">
-                       <div class="form-group">
-                    <label for="exampleFormControlInput1">Customer FirstName</label>
-        <input type="text" name="first_name" class="form-control" id="exampleFormControlInput1" placeholder="Title" required>
-                  </div> 
+                        <div class="form-group">
+                            <label>Invoice Number</label>
+                    <input type="text" class="form-control" name="invoice_number" placeholder="Invoice Number">
+                            
+                        </div>
+                        
                     </div>
 
-                     <div class="col">
+                    <div class="col">
                        <div class="form-group">
-                    <label for="exampleFormControlInput1">Customer LastName</label>
-        <input type="text" name="last_name" class="form-control" id="exampleFormControlInput1" placeholder="Title" required>
-                  </div> 
-                    </div>
+                    <label class="control-label">Customer Name</label>
+                    <select class="form-control" id="exampleFormControlSelect1" name="customer" required>
+                        <?php
+                        // displaying customers
+                        $customers = $ch->allContact();
+                        foreach($customers as $row){
 
-                                <div class="col">
-                                   <div class="form-group">
-                                <label for="exampleFormControlInput1">Mobile</label>
-                    <input type="text" name="phone" class="form-control" id="exampleFormControlInput1" placeholder="Title" required>
-                              </div> 
-                                </div>
+                            $fullName = $row['firstName']." ".$row['lastName'];
 
-                                 <div class="col">
-                       <div class="form-group">
-                    <label for="exampleFormControlInput1">Email</label>
-        <input type="text" name="email" class="form-control" id="exampleFormControlInput1" placeholder="Title" required>
-                  </div> 
-                    </div>
 
+
+                         ?>
+
+                         <option><?php echo $fullName ; ?></option>
+                         <?php
+                     }
+                     ?>
+                      
+                      
+                    </select>
 
                     
+                </div> 
+                    </div>
+
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="control-label">Item</label>
+                <input type="text" class="form-control" name="item" placeholder="Item" required>
+                            
+                        </div>
+                        
+                    </div>
+
+                    
+
                 </div>
                 <!-- end of row -->
 
@@ -214,7 +240,7 @@ if (isset($_POST['send'])) {
 
                     <div class="col">
                         <div class="form-group">
-                      <label for="exampleFormControlInput1">Invoice Date</label>
+                      <label class="control-label">Invoice Date</label>
           <input type="date" name="invoice_date" class="form-control" placeholder="Invoice Date" required>
                         </div> 
                   </div>
@@ -223,25 +249,17 @@ if (isset($_POST['send'])) {
 
                    <div class="col">
                         <div class="form-group">
-                      <label for="exampleFormControlInput1">Travelling Country</label>
-                       <select class="form-control"  name="travel_country">
-                          <option value="usa">USA</option>
-                          <option value="canada">Canada</option>
-                          <option value="china">China</option>
-                          <option value="india">India</option>
-                          <option value="europe">Europe</option>
-                        </select>
+                      <label class="control-label">Payment Due</label>
+          <input type="date" name="payment_due" class="form-control" placeholder="Payment Date" required>
+                      
                         </div> 
                   </div>
 
                    <div class="col">
                         <div class="form-group">
-                      <label for="exampleFormControlInput1">Purpose of Travel</label>
-                       <select class="form-control"  name="travel_purpose">
-                          <option value="study">Study abroad</option>
-                          <option value="tourism">Tourism</option>
-                          <option value="live">Live and work</option>
-                        </select>
+                      <label for="exampleFormControlInput1">Valid Until</label>
+                      <input type="date" name="validity" class="form-control" placeholder="Valid until">
+                       
                         </div> 
                   </div>
 
@@ -252,78 +270,78 @@ if (isset($_POST['send'])) {
 
                     <div class="col">
                         <div class="form-group">
-                      <label for="exampleFormControlInput1">Next of kin</label>
-          <input type="text" name="kin" class="form-control" placeholder="Item" required>
+                      <label class="control-label">Amount</label>
+          <input type="number" min="1" name="amount" class="form-control" placeholder="Amount" required>
                         </div> 
                   </div>
 
                    <div class="col">
                         <div class="form-group">
-                      <label for="exampleFormControlInput1">Deposit</label>
-          <input type="number" min="1" name="deposit" class="form-control"  placeholder="Price" required>
+                      <label class="control-label">Total Amount</label>
+          <input type="number" min="1" name="total_amount" class="form-control"  placeholder="Total Amount" required>
                         </div> 
                   </div>
 
                    <div class="col">
                         <div class="form-group">
-                      <label for="exampleFormControlInput1">Balance</label>
-          <input type="number" min="1" name="balance" class="form-control"  placeholder="Balance" required>
+                      <label for="exampleFormControlInput1">Balance Payment</label>
+          <input type="number" min="1" name="balance" class="form-control"  placeholder="Balance">
                         </div> 
                   </div>
 
 
                 </div>
 
-                    
+                <div class="row">
+
+                    <div class="col">
+                       
+                        <div class="form-group">
+                <label for="exampleFormControlInput1">Status</label>
+                <select class="form-control"  name="invoice_status">
+                    <option>Select</option>
+                  <option value="unpaid">Unpaid</option>
+                  <option value="paid">Paid</option>
+                  <option value="overdue">Overdue</option>
+                  
+                </select>
 
                 
+                </div> 
 
-                 <div class="form-group">
+                    </div>
+
+                     <div class="col">
+                        
+                        <div class="form-group">
                 <label for="exampleFormControlInput1">Note</label>
      <textarea class="form-control" name="note" id="exampleFormControlTextarea1" rows="3"
      placeholder="Note"></textarea>
-    
-              </div>
+                </div>  
+                     </div>
 
 
+                    
+                </div>
 
-
-
-                
-
-               
-
-                
                 <button type="submit" class="btn btn-primary" name="laliga">Submit</button>
                </form> 
             </div>
 
-                   
-
-
-                
-
-    
-            
-
-
-               
-
-
-             <div class="container event" id="two">
+            <div class="container event" id="two">
 
                <table class="table">
 
             <thead>
               <tr>
                 
-                <th scope="col">FirstName</th>
-                <th scope="col">LastName</th>
-                <th scope="col">Email</th>
-                <th scope="col">Date</th>
-                <th scope="col">Travel Country</th>
-                <th scope="col">Deposit</th>
-                <th scope="col">Balance</th>
+                <th scope="col">InvoiceNumber</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Item</th>
+                <th scope="col">Invoice Date</th>
+                <th scope="col">Payment Date</th>
+                <th scope="col">Total Amount</th>
+                <th scope="col">Preview</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
@@ -360,7 +378,7 @@ if (isset($_POST['send'])) {
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Message Contact</h5>
+        <h5 class="modal-title" id="staticBackdropLabel">Payment reminder</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -379,27 +397,15 @@ if (isset($_POST['send'])) {
         <div class="form-group row">
             <label for="inputPassword" class="col-sm-2 col-form-label">To</label>
             <div class="col-sm-10">
-                <select class="form-control" name="cust_email" id="exampleFormControlSelect1">
-                    <?php 
-
-                    foreach ($data as $row) {
-                    echo '
-                        <option>'.$row['email'].'</option>
-
-                    ';
-                }
-
-                    ?>
-                  
-                </select>
-              <!-- <input type="email" name="cust_email" class="form-control" id="inputPassword"> -->
+               
+  <input type="email" name="cust_email" class="form-control" id="inputPassword" placeholder="Email" required>
             </div>
           </div>
 
           <div class="form-group row">
               <label for="inputPassword" class="col-sm-2 col-form-label">Subject</label>
               <div class="col-sm-10">
-                <input type="text" name="subject" class="form-control" id="inputPassword">
+                <input type="text" name="subject" class="form-control" id="inputPassword" value="Invoice from your service Provider">
               </div>
             </div>
 
@@ -407,7 +413,7 @@ if (isset($_POST['send'])) {
                 <label for="inputPassword" class="col-sm-2 col-form-label">Message</label>
                 <div class="col-sm-10">
                  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-                 name="message"></textarea>
+                 name="message" placeholder="Your Message"></textarea>
                 </div>
               </div>
 
@@ -475,30 +481,33 @@ $.ajax({
 
            var edit = response[i]['edit'];
          var my_delete  = response[i]["delete"];
+         var my_view = response[i]['view'];
 
          var action = edit.concat(" ", my_delete);
+         // var action = string.concat(edit,my_delete,my_view);
 
-         var firstName = response[i]["first_name"];
+         var invoiceNumber = response[i]["invoice_number"];
 
-         var lastName = response[i]["last_name"];
-         var email = response[i]["email"];
+         var customer = response[i]["customer"];
+         var item = response[i]["item"];
        
          var  invoice_date = response[i]["invoice_date"];
-         var  travel_country = response[i]["travel_country"];
-         var  deposit = response[i]["deposit"];
-         var  balance = response[i]["balance"];
+         var  payment_due = response[i]["payment_due"];
+        
+         var  total_amount = response[i]["total_amount"];
 
          var table_str = "<tr>" +
                       
                       
-                      "<td>" + firstName + "</td>" +
-                      "<td>" + lastName + "</td>" +
-                      "<td>" + email + "</td>" +
+                      "<td>" + invoiceNumber + "</td>" +
+                      "<td>" + customer + "</td>" +
+                      "<td>" + item + "</td>" +
                     
                       "<td>" + invoice_date + "</td>" +
-                      "<td>" + travel_country + "</td>" +
-                      "<td>" + deposit + "</td>" +
-                      "<td>" + balance + "</td>" +
+                      "<td>" + payment_due + "</td>" +
+                         "<td>" + total_amount + "</td>" +
+                      "<td>" + my_view + "</td>" +
+                   
                       "<td>" + action + "</td>" +
                       "</tr>";
 

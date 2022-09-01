@@ -3,7 +3,6 @@
 
   <div class="album py-5 bg-light">
     <div class="container">
-
       <h3 class="text-center">CRM Platform For All Your Business Needs</h3>
       <p class="text-center">
       <p class="intro text-center">CloudsoftCRM CRM platform has all the tools and integrations you need for marketing, sales, content<br> management, and customer service. Each product in the platform is powerful alone, but the real magic<br> happens when you use them together.</p>
@@ -15,6 +14,7 @@
           <h3 class="text-center">Our Awesome features</h3>
 
            <div class="row">
+
         <div class="col-md-4">
          <div class="card" style="width: 18rem;">
            <div class="card-body">
@@ -48,7 +48,7 @@
         </div>
 
 
-<div class="col-md-4">
+        <div class="col-md-4">
          <div class="card" style="width: 18rem;">
            <div class="card-body">
              <h5 class="card-title">Service Hub</h5>
@@ -65,7 +65,7 @@
         </div>
 
 
-<div class="col-md-4">
+        <div class="col-md-4">
          <div class="card" style="width: 18rem;">
            <div class="card-body">
              <h5 class="card-title">CMS Hub</h5>
@@ -81,7 +81,7 @@
          </div>
         </div>
 
-<div class="col-md-4">
+        <div class="col-md-4">
          <div class="card" style="width: 18rem;">
            <div class="card-body">
              <h5 class="card-title">Operations Hub</h5>
@@ -115,11 +115,11 @@
 
   <div class="row">
 
-    <div class="col-6">
+    <div class="col-6 connect1">
       <h2>Connect with customers<br> everywhere they are</h2>
     </div>
 
-    <div class="col-6">
+    <div class="col-6 connect2">
       <ul class="myList">
          <li>Reach customers across every channel: telephone, email, live chat, and social media</li>
   <li>Get real-time notifications when customers interact with your business</li>

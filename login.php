@@ -108,6 +108,12 @@ button {
   border-top-right-radius: 0;
 }
       /*page*/
+
+
+      /*media queries*/
+      .signup {
+        height: 370px;
+      }
     </style>
 
 

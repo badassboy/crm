@@ -18,7 +18,7 @@ class Business{
 		return $data;
 	}
 
-	public function registerAdmin($email,$username,$password,$password2)
+	public function registerAdmin($company,$mobile,$address,$email,$password)
 	{
 
 		$dbh = DB();
@@ -26,29 +26,41 @@ class Business{
 		$validated_email = filter_var($email,FILTER_SANITIZE_EMAIL);
 		$current_date = date("Y-m-d");
 		
-
-		if (strlen($password)<6) {
-			echo '<div class="alert alert-danger" role="alert">Password too short</div>';
-		}else if ($password != $password2) {
-			echo '<div class="alert alert-danger" role="alert">Password does not match</div>';
-		}elseif(!$validated_email){
-			echo '<div class="alert alert-danger" role="alert">Invalid Email</div>';
-
+		$hashed = password_hash($password,PASSWORD_BCRYPT);
+		$stmt = $dbh->prepare("INSERT INTO admin(company,mobile,address,email,password,register_date) VALUES(?,?,?,?,?,?)");
+		$stmt->execute([$company,$mobile,$address,$validated_email,$hashed,$current_date]);
+		$inserted = $stmt->rowCount();
+		if ($inserted>0) {
+			return true;
+		}else {
+			return $dbh->errorInfo();
 		}
-
-		else{
-			$verified = "No";
-			$hashed = password_hash($password,PASSWORD_BCRYPT);
-			$stmt = $dbh->prepare("INSERT INTO admin(email,username,password,verified,register_date) VALUES(?,?,?,?,?)");
-			$stmt->execute([$validated_email,$username,$hashed,$verified,$current_date]);
-			$inserted = $stmt->rowCount();
-			if ($inserted>0) {
-				return true;
-			}else {
-				return $dbh->errorInfo();
-			}
-		}
+		
 	}
+
+	public function getCompanyDetails()
+	{
+		$db = DB();
+		$stmt = $db->prepare("SELECT * FROM admin");
+		$stmt->execute();
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $data;
+
+	}
+
+	public function getCustomerDetails($id)
+	{
+		$db = DB();
+		$stmt = $db->prepare("SELECT contact.location, contact.mobile
+			FROM contact 
+			INNER JOIN invoice ON contact.company = invoice.company WHERE invoice.id = ?");
+		$stmt->execute([$id]);
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $data;
+
+	}
+
+
 
 	public function getUserDate($user)
 	{
@@ -68,7 +80,7 @@ class Business{
 	public function loginAdmin($userInput,$password)
 	{
 		$dbh = DB();
-		$stmt = $dbh->prepare("SELECT id,username,email,password,verified FROM admin WHERE username=:input or email=:input");
+		$stmt = $dbh->prepare("SELECT id,company,email,password,verified FROM admin WHERE company=:input or email=:input");
 
 		$stmt->execute(["input" => $userInput]);
 		$data = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -252,67 +264,21 @@ class Business{
 	}
 
 
-	public function Advert($title,$venue,$file_name,$amount,$days)
+	public function service($title,$status,$duration,$price,$location,$description)
 	{
 		$dbs = DB();
 
-		$dir = "adverts/images/";
-		$file_name = $_FILES['photo']['name'];
-		$file_size = $_FILES['photo']['size'];
-		$file_type = $_FILES['photo']['type'];
-		$file_tmp = $_FILES['photo']['tmp_name'];
-
-		$test_file = $dir.basename($_FILES["photo"]["name"]);
-		$file_ext = pathinfo($test_file, PATHINFO_EXTENSION);
-
-		$extensions= array("jpeg","jpg","png","gif");
-
-		if(in_array($file_ext,$extensions) === false){
-			$errors[]="extension not allowed, please choose a JPEG or PNG file.";
-		}
-
-		// check if image already exist
-		if (file_exists($file_name)) {
-			$errors[]="file already exist";
-		}
-
-		// check for 2mb file
-		if($file_size > 4097152) {
-			$errors[]='File size must be exactly 2MB';
-		}
-
-
-		if(!preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $title)){
-			$errors[] = "no characters allowed";
-		}
-
-		if(!preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $venue)){
-			$errors[] = "no characters allowed";
-		}
-
 		
-
-
-
-		if (empty($errors)==true) {
-
-			move_uploaded_file($file_tmp, "adverts/images/".$file_name);
-
-			$stmt = $dbs->prepare("INSERT INTO advert(title,venue,picture,amount,days) VALUES(?,?,?,?,?)");
-			$stmt->execute(array($title,$venue,$dir.$file_name,$amount,$days));
-			$inserted = $stmt->rowCount();
-			if($inserted>0){
-				return true;
-			}else {
-				return false;
-			}
-
-
-			
-		}
-
-		
+	$stmt = $dbs->prepare("INSERT INTO service(title,status,duration,rate,location,description) VALUES(?,?,?,?,?,?)");
+	$stmt->execute(array($title,$status,$duration,$price,$location,$description));
+	$inserted = $stmt->rowCount();
+	if($inserted>0){
+		return true;
+	}else {
+		return false;
 	}
+
+}
 
 	public function displayAdvert()
 	{
@@ -324,7 +290,8 @@ class Business{
 		
 	}
 
-	public function addContact($firstName,$lastName,$email,$mobile,$city)
+	public function addContact($firstName,$middlename,$lastName,$company,$email,$secondary_email,$status,
+		$phone,$mobile,$whatsapp,$address,$location,$source_lead)
 	{
 
 		$db=DB();
@@ -340,8 +307,11 @@ class Business{
 			
 		}else{
 			// insert data after all validation is passed
-			$stmt =$db->prepare("INSERT INTO contact(firstName,lastName, email,phone,location) VALUES(?,?,?,?,?)");
-			$stmt->execute([$firstName,$lastName,$email,$mobile,$city]);
+			$stmt =$db->prepare("INSERT INTO contact(firstName,middle_name,lastName,company,email,
+				secondary_email,status,phone,mobile,whatsapp,address,location,source_lead) 
+			VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			$stmt->execute([$firstName,$middlename,$lastName,$company,$email,$secondary_email,$status,
+		$phone,$mobile,$whatsapp,$address,$location,$source_lead]);
 			$inserted = $stmt->rowCount();
 			if ($inserted>0) {
 				return true;
@@ -352,11 +322,10 @@ class Business{
 		}
 
 
-		
-
 	}
 
-	public function allContact(){
+	public function allContact()
+	{
 		$db= DB();
 		$stmt=$db->prepare("SELECT * FROM contact");
 		$stmt->execute();
@@ -378,36 +347,28 @@ class Business{
 
 	}
 
+
+
+
 	
 
 
-	public function createInvoice($firstName,$lastName,$phone,$email,$invoice_date,$travel_country,$travel_purpose,$next_of_kin,$deposit,$balance,$note)
+	public function createInvoice($invoice_number,$customer,$item,$invoice_date,$payment_due,$validity,
+        $amount,$totalAmount,$balance,$status,$note)
 	{
 		$db=DB();
-		if (!preg_match("/^[a-zA-Z-' ]*$/",$firstName)) {
-			echo '<div class="alert alert-danger" role="alert">Only letters allowed</div>';
-		}elseif(!preg_match("/^[a-zA-Z-' ]*$/",$lastName)){
-			echo '<div class="alert alert-danger" role="alert">Only letters allowed</div>';
-		}elseif (strlen($phone)<10) {
-			echo '<div class="alert alert-danger" role="alert">Mobile too short</div>';
-			
-		}elseif (!filter_var($email,FILTER_VALIDATE_EMAIL)) {
-			echo '<div class="alert alert-danger" role="alert">Invalid Email</div>';
-			
-		}elseif (preg_match("/^[a-zA-Z-' ]*$/",$next_of_kin)) {
-			echo '<div class="alert alert-danger" role="alert">Only letters allowed</div>';
-			
-		}else 
-		{
-			$stmt =$db->prepare("INSERT INTO invoice(firstName,lastName,phone,email,invoice_date,travel_country,travel_purpose,next_of_kin,deposit,balance,note)VALUES(?,?,?,?,?,?,?,?,?,?,?)");
-			$stmt->execute([$firstName,$lastName,$phone,$email,$invoice_date,$travel_country,$travel_purpose,$next_of_kin,$deposit,$balance,$note]);
+		
+		
+		$stmt =$db->prepare("INSERT INTO invoice(invoice_number,customer,item,invoice_date,payment_due,validity,amount,total_amount,balance,status,note)VALUES(?,?,?,?,?,?,?,?,?,?,?)");
+			$stmt->execute([$invoice_number,$customer,$item,$invoice_date,$payment_due,$validity,
+        $amount,$totalAmount,$balance,$status,$note]);
 			$inserted = $stmt->rowCount();
 			if ($inserted>0) {
 				return true;
 			}else {
 				return false;
 			}
-		}
+		
 		
 
 	}
@@ -422,8 +383,17 @@ class Business{
 		return $data;
 	}
 
-	public function editInvoice($id,$firstName,$lastName,$phone,$email,$invoice_date,$travel_country,$travel_purpose,$next_of_kin,$deposit,$balance,$note)
-	{
+	public function editInvoice($invoice_number,$customer,$item,$invoice_date,$payment_due,$validity,$total_amount,$note,$id)
+	{	
+		$db = DB();
+        $stmt = $db->prepare("UPDATE invoice SET invoice_number = ?,customer = ?,item = ?,invoice_date =?, payment_due = ?, validity = ?, total_amount = ?, note= ? WHERE id = ?");
+		$stmt->execute([$invoice_number,$customer,$item,$invoice_date,$payment_due,$validity,$total_amount,$note,$id]);
+		$row = $stmt->rowCount();
+		if ($row>0) {
+			return true;
+		}else {
+			return false;
+		}
 		
 	}
 
@@ -837,12 +807,13 @@ class Business{
 
 
 
-	public function task($subject,$dueDate,$status,$priority,$description)
+	public function task($subject,$dueDate,$assigned_member,$start_time,$end_time,$completion_duration,
+		$status,$priority,$description)
 	{
 		$dbh = DB();
-		$stmt = $dbh->prepare("INSERT INTO task(subject,dueDate,status,priority,description) 
-			VALUES(?,?,?,?,?)");
-		$stmt->execute([$subject,$dueDate,$status,$priority,$description]);
+		$stmt = $dbh->prepare("INSERT INTO task(subject,dueDate,assigned_member,start_time,end_time,completion_duration,status,priority,description) 
+			VALUES(?,?,?,?,?,?,?,?,?)");
+		$stmt->execute([$subject,$dueDate,$assigned_member,$start_time,$end_time,$completion_duration,$status,$priority,$description]);
 		$data = $stmt->rowCount();
 		if ($data>0) {
 			return true;
@@ -865,12 +836,12 @@ class Business{
 
 	}
 
-	public function meeting($title,$meeting_date,$from,$to,$related)
+	public function meeting($title,$service,$location,$address,$assigned_member,$meeting_date,$from,$to,$related)
 	{
 		$dbh = DB();
-		$stmt = $dbh->prepare("INSERT INTO meeting(title,meeting_date,meeting_start,meeting_end,related) 
-			VALUES(?,?,?,?,?)");
-		$stmt->execute([$title,$meeting_date,$from,$to,$related]);
+		$stmt = $dbh->prepare("INSERT INTO meeting(title,service,location,address,assigned_member,meeting_date,meeting_start,meeting_end,related) 
+			VALUES(?,?,?,?,?,?,?,?,?)");
+		$stmt->execute([$title,$service,$location,$address,$assigned_member,$meeting_date,$from,$to,$related]);
 		$data = $stmt->rowCount();
 		if ($data>0) {
 			return true;

@@ -6,13 +6,18 @@ $ch = new Business();
 if(isset($_POST['laliga'])){
     $subject = $ch->testInput($_POST['subject']);
     $dueDate = $ch->testInput($_POST['task_date']);
+    $assigned_member = $ch->testInput($_POST['assigned_member']);
+    $task_start_time = $ch->testInput($_POST['task_starting_time']);
+    $task_end_time = $ch->testInput($_POST['task_ending_time']);
+    $total_duration = $ch->testInput($_POST['completion_duration']);
     $status = $ch->testInput($_POST['status']);
     $priority = $ch->testInput($_POST['priority']);
     $description = $ch->testInput($_POST['description']);
   // var_dump($picture);
   
 
-$laliga = $ch->task($subject,$dueDate,$status,$priority,$description);
+$laliga = $ch->task($subject,$dueDate,$assigned_member,$task_start_time,
+    $task_start_time,$total_duration,$status,$priority,$description);
     if($laliga){
       $msg = '<div class="alert alert-success" role="alert">Task Created</div>';
     }else {
@@ -111,6 +116,10 @@ if (isset($_POST['send'])) {
             margin-bottom: 3%;
         }
 
+        .form-group  .control-label:after {
+  content:"*";color:red;
+}
+
 
     </style>
     
@@ -180,25 +189,66 @@ if (isset($_POST['send'])) {
                 <h5>Task</h5>
                <form method="post" id="appoint">
 
-                
+                <div class="row">
 
-                    <div class="col">
+                  <div class="col">
                        <div class="form-group">
-                    <label for="exampleFormControlInput1">Subject</label>
+                    <label for="exampleFormControlInput1" class="control-label">Subject</label>
 <input type="text" name="subject" class="form-control"  placeholder="Subject" required>
                   </div> 
-                    </div>
+                    </div> 
 
-                    <div class="col">
-                          <div class="form-group">
-                              <label for="exampleFormControlInput1">Task Date</label>
+                     <div class="col">
+                           <div class="form-group">
+                      <label for="exampleFormControlInput1" class="control-label">Task Date</label>
           <input type="date" name="task_date" class="form-control" placeholder="Date" required>
-                            </div>  
+                            </div>   
+                        </div>
 
-                    </div>
 
+                     <div class="col">
+                           <div class="form-group">
+                              <label for="exampleFormControlInput1">Assigned To</label>
+          <input type="text" name="assigned_member" class="form-control" placeholder="Team member name">
+                            </div>   
+                        </div>
+
+
+
+                </div>
+
+                    
 
                     <div class="row">
+
+                       
+
+                        <div class="col">
+                             <div class="form-group">
+                      <label for="exampleFormControlInput1" class="control-label">Task Starting time</label>
+          <input type="time" name="task_starting_time" class="form-control" placeholder="Staring time" required>
+                            </div> 
+                            
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                  <label for="exampleFormControlInput1" class="control-label">Task Ending time</label>
+          <input type="time" name="task_ending_time" class="form-control" placeholder="Ending time" required>
+                            </div>  
+                        </div>
+
+                         <div class="col">
+                           <div class="form-group">
+                  <label for="exampleFormControlInput1" class="control-label">Total Duration</label>
+          <input type="text" name="completion_duration" class="form-control" placeholder="Competion Duartion" required>
+                            </div>   
+                        </div>
+                        
+                    </div>
+
+                
+                <div class="row">
 
                        <div class="col">
                              <div class="form-group">

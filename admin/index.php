@@ -76,8 +76,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 			    		?>
 			    	  <div class="form-group">
-			    	      <label for="exampleInputEmail1">Username(*)</label>
-			    	      <input type="text" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Username">
+			    	      <label for="exampleInputEmail1">Company(*)</label>
+			    	      <input type="text" name="username" class="form-control"  placeholder="Company Name">
 			    	      
 			    	    </div>
 

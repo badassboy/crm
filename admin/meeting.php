@@ -5,14 +5,18 @@ $ch = new Business();
 
 if(isset($_POST['laliga'])){
     $title = $ch->testInput($_POST['title']);
+    $service = $ch->testInput($_POST['service']);
+    $location = $ch->testInput($_POST['location']);
+    $address = $ch->testInput($_POST['address']);
+    $assigned_member = $ch->testInput($_POST['assigned_member']);
     $meetingDate = $ch->testInput($_POST['meeting_date']);
     $from = $ch->testInput($_POST['meeting_start']);
     $to = $ch->testInput($_POST['meeting_end']);
     $related = $ch->testInput($_POST['related']);
-  // var_dump($picture);
+  
   
 
-$laliga = $ch->meeting($title,$meetingDate,$from,$to,$related);
+$laliga = $ch->meeting($title,$service,$location,$address,$assigned_member,$meetingDate,$from,$to,$related);
     if($laliga){
       $msg = '<div class="alert alert-success" role="alert">Meeting  Created</div>';
     }else {
@@ -111,6 +115,10 @@ if (isset($_POST['send'])) {
             margin-bottom: 3%;
         }
 
+        .form-group .control-label:after{
+            content:"*";color:red;
+        }
+
 
     </style>
     
@@ -180,29 +188,68 @@ if (isset($_POST['send'])) {
                 <!-- <h5>Task</h5> -->
                <form method="post" id="appoint">
 
-                
+                <div class="row">
 
                     <div class="col">
                        <div class="form-group">
-                    <label for="exampleFormControlInput1">Title</label>
-<input type="text" name="title" class="form-control"  placeholder="Title" required>
+                    <label for="exampleFormControlInput1" class="control-label">Title</label>
+            <input type="text" name="title" class="form-control"  placeholder="Title" required>
                   </div> 
                     </div>
 
                     <div class="col">
+                       <div class="form-group">
+                    <label for="exampleFormControlInput1">Service Type</label>
+<input type="text" name="service" class="form-control"  placeholder="Service Type">
+                  </div> 
+                    </div>
+
+                    <div class="col">
+                       <div class="form-group">
+                    <label for="exampleFormControlInput1" class="control-label">Location</label>
+<input type="text" name="location" class="form-control"  placeholder="location" required>
+                  </div> 
+                    </div>
+
+                    
+                </div>
+
+                <div class="row">
+                    <div class="col">
                           <div class="form-group">
-                              <label for="exampleFormControlInput1">Meeting Date</label>
-          <input type="date" name="meeting_date" class="form-control" placeholder="Meeting" required>
+                              <label for="exampleFormControlInput1">Address</label>
+          <input type="address" name="address" class="form-control" placeholder="Address">
                             </div>  
 
                     </div>
+
+                     <div class="col">
+                          <div class="form-group">
+                              <label for="exampleFormControlInput1">Assigned To</label>
+          <input type="text" name="assigned_member" class="form-control" placeholder="Representative name">
+                        </div>  
+
+                    </div>
+
+                     <div class="col">
+                          <div class="form-group">
+                      <label for="exampleFormControlInput1" class="control-label">Meeting Date</label>
+          <input type="date" name="meeting_date" class="form-control" placeholder="Meeting" required>
+                            </div>  
+
+                    </div> 
+                </div>
+
+                    
+
+                   
 
 
                     <div class="row">
 
                        <div class="col">
                              <div class="form-group">
-                                 <label for="exampleFormControlInput1">Meeting Start</label>
+                 <label for="exampleFormControlInput1" class="control-label">Meeting Start</label>
                  <input type="time" name="meeting_start" class="form-control" placeholder="time start" required>
                                  
                                </div>  
@@ -210,7 +257,7 @@ if (isset($_POST['send'])) {
 
                        <div class="col">
                              <div class="form-group">
-                                 <label for="exampleFormControlInput1">Meeting End</label>
+                 <label for="exampleFormControlInput1" class="control-label">Meeting End</label>
                  <input type="time" name="meeting_end" class="form-control" placeholder="time end" required>
                                  
                                </div>  
@@ -218,7 +265,7 @@ if (isset($_POST['send'])) {
 
                        <div class="col">
                              <div class="form-group">
-                                 <label for="exampleFormControlInput1">Related To</label>
+                 <label for="exampleFormControlInput1" class="control-label">Agenda</label>
                  <input type="text" name="related" class="form-control" placeholder="Related to" required>
                                  
                                </div>  

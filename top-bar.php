@@ -38,11 +38,15 @@
         user-select: none;
       }
 
-      @media (min-width: 768px) {
+      @media screen and (min-width: 768px) {
+
         .bd-placeholder-img-lg {
           font-size: 3.5rem;
         }
-      }
+
+       
+
+    }
    </style>
 
    <link rel="stylesheet" type="text/css" href="css/style.css">

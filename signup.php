@@ -65,12 +65,15 @@ if (isset($_POST['signup'])) {
       	
       }
 
+
+
       .form-signin {
-  width: 100%;
-  max-width: 330px;
-  padding: 15px;
-  margin-left: 10%;
-}
+
+      width: 100%;
+      max-width: 330px;
+      padding: 15px;
+      margin-left: 10%;
+    }
 
 .form-signin h3 {
 	margin-top: 15%;
@@ -144,6 +147,48 @@ button {
       .card-text {
         font-size: 25px;
       }
+
+      /*media queries*/
+
+     @media screen and (max-width: 480px) {
+
+       
+      
+         input[type="text"] {
+          width: 300px;
+          padding: 12px 20px;
+            margin: 12px 0;
+            box-sizing: border-box;
+        
+ 
+    }
+
+      .form-signin input[type="email"] {
+          width: 300px;
+          padding: 12px 20px;
+          margin: 8px 0;
+          box-sizing: border-box;
+          /*margin-bottom: ;*/
+        
+      }
+
+      .form-signin input[type="password"] {
+        width: 300px;
+        padding: 12px 20px;
+        margin: 8px 0;
+        box-sizing: border-box;
+
+        
+      }
+
+
+        .second {
+          display: none;
+        }
+
+  
+    }
+
 
     </style>
 

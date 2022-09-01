@@ -1,6 +1,8 @@
 <?php
 
-require("../database.php");
+// require("../database.php");
+require("../functions.php");
+$ch = new Business();
 $db = DB();
 $id = "";
 
@@ -15,8 +17,15 @@ $msg = "";
 		$stmt->execute([$id]);
 		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $invoice_id = $row['id'];
-			// $title  = $row['title'];
-			// $description = $row['full_description'];
+			$invoice_number  = $row['invoice_number'];
+			$customer = $row['customer'];
+			$item = $row['item'];
+			$invoice_date = $row['invoice_date'];
+			$payment_due = $row['payment_due'];
+			$validity = $row['validity'];
+			$total_amount = $row['total_amount'];
+			$note = $row['note'];
+
 		}
 	}else {
 		echo  "no";
@@ -25,21 +34,26 @@ $msg = "";
 
     if(isset($_POST['update'])){
 
-        $travel_country = $_POST['travel_country'];
-        $next_of_kin = $_POST['next_of_kin'];
-        $travel_purpose = $_POST['travel_purpose'];
+        $invoice_number = $_POST['invoice_number'];
+        $customer = $_POST['customer'];
+        $item = $_POST['item'];
+        $invoice_date= $_POST['invoice_date'];
+        $payment_due = $_POST['payment_due'];
+        $validity = $_POST['validity'];
+        $total_amount = $_POST['total_amount'];
         $note = $_POST['note'];
         $id = $_POST['id'];
 
-        $stmt = $db->prepare("UPDATE invoice SET travel_country = ?,next_of_kin = ?,travel_purpose = ?,note =?
-         WHERE id = ?");
-		$stmt->execute([$travel_country,$next_of_kin,$travel_purpose,$note,$id]);
-		$row = $stmt->rowCount();
-		if ($row>0) {
-			$msg = '<div class="alert alert-success" role="alert">Invoice Updated</div>';
-		}else {
-			$msg =  '<div class="alert alert-danger" role="alert">Failed to update invoice</div>';
-		}
+        $updated_invoice = $ch->editInvoice($invoice_number,$customer,$item,$invoice_date,$payment_due,
+        	$validity,$total_amount,$note,$id);
+        if ($updated_invoice) {
+        	echo "<script>alert('invoice edited successfully')</script>";
+        }else {
+        	echo "<script>alert('failed in editing invoice')</script>";
+        }
+
+
+
 
 
     }
@@ -133,36 +147,53 @@ $msg = "";
 			<h3>Edit Invoice</h3>
 			<form method="post" action="">
 
+				<div class="form-group">
+	<input type="text" class="form-control" name="invoice_number" value="<?php echo $invoice_number;  ?>">
+					
+				</div>
+
+				<div class="form-group">
+					 
+			      	<input type="text" class="form-control" name="customer" value="<?php echo $customer; ?>">
+			     
+			    
+					
+					
+				</div>
+
+
+
 			  <div class="form-group">
-			    <label for="exampleInputEmail1">Travelling Country</label>
-			     <select class="form-control" name="travel_country">
-			      <option value="usa">USA</option>
-			      <option value="canada">Canada</option>
-			      <option value="australia">Australia</option>
-			      <option value="china">China</option>
-			      <option value="india">India</option>
-			      <option value="europe">Europe</option>
-			    </select>
+			    <input type="text" class="form-control" name="item" value="<?php echo $item; ?>">
+			    
 			  </div>
 
 			  <div class="form-group">
-			    <label for="exampleInputEmail1">Next of kin</label>
-			    <input type="text" name="next_of_kin" class="form-control">
+			  
+			    <input type="text" class="form-control" name="invoice_date" value="<?php echo $invoice_date; ?>">
 			  </div>
 
 
 			  <div class="form-group">
-			    <label>Travelling Purpose</label>
-			    <select class="form-control" name="travel_purpose">
-			         <option value="study">Study Abroad</option>
-			         <option value="tourism">Tourism</option>
-			         <option value="live">Live and work</option>
-			       </select>
+			   <input type="" name="payment_due" class="form-control" value="<?php echo $payment_due; ?>">
+			   
+			  </div>
+
+			  <div class="row">
+
+			  	<div class="col">
+			  		<input type="" class="form-control" name="validity" value="<?php echo $validity; ?>">
+			  	</div>
+
+			  	<div class="col">
+			  		<input type="" class="form-control" name="total_amount" value="<?php echo $total_amount;  ?>">
+			  	</div>
+			  	
 			  </div>
 
 			  <div class="form-group">
-			    <label for="exampleInputEmail1">Note</label>
-			    <textarea class="form-control" name="note" rows="3" cols="3"></textarea>
+			    
+	    <textarea class="form-control" name="note" rows="3" cols="3" value="<?php echo $note; ?>"></textarea>
 			  </div>
 
 
