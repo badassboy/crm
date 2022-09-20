@@ -18,7 +18,6 @@ if (isset($_POST['signup'])) {
 	if (!empty($company) || !empty($password) || !empty($email) || !empty($address)) {
 
 		
-
 		$admin_id = $ch->registerAdmin($company,$mobile,$address,$email,$password);
 
 			

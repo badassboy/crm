@@ -24,8 +24,8 @@ if (isset($_POST['signup'])) {
 
 	$msg = '<div class="alert alert-success" role="alert">Registration successful.Check your email to activate your account</div>';
 
-			$ch->sendEmail($email);
-      $ch->welcomeMessage($email);
+			// $ch->sendEmail($email);
+      // $ch->welcomeMessage($email);
 
 		}else{
 				$msg = '<div class="alert alert-danger" role="alert">Error in creating account</div>';

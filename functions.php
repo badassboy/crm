@@ -18,7 +18,7 @@ class Business{
 		return $data;
 	}
 
-	public function registerAdmin($company,$mobile,$address,$email,$password)
+	public function registerAdmin($mobile,$address,$email,$password)
 	{
 
 		$dbh = DB();
@@ -27,8 +27,8 @@ class Business{
 		$current_date = date("Y-m-d");
 		
 		$hashed = password_hash($password,PASSWORD_BCRYPT);
-		$stmt = $dbh->prepare("INSERT INTO admin(company,mobile,address,email,password,register_date) VALUES(?,?,?,?,?,?)");
-		$stmt->execute([$company,$mobile,$address,$validated_email,$hashed,$current_date]);
+		$stmt = $dbh->prepare("INSERT INTO admin(mobile,address,email,password,register_date) VALUES(?,?,?,?,?)");
+		$stmt->execute([$mobile,$address,$validated_email,$hashed,$current_date]);
 		$inserted = $stmt->rowCount();
 		if ($inserted>0) {
 			return true;
