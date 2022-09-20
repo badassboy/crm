@@ -18,7 +18,7 @@ if (isset($_POST['signup'])) {
 
 	if (!empty($username) || !empty($email)  || !empty($password) || !empty($password2)) {
 
-		$admin_id = $ch->registerAdmin($email,$username,$password,$password2);
+		$admin_id = $ch->registerAdmin($username,$email,$password,$password2);
 
 		if ($admin_id==1) {
 

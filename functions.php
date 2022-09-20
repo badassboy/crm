@@ -18,7 +18,7 @@ class Business{
 		return $data;
 	}
 
-	public function registerAdmin($mobile,$address,$email,$password)
+	public function registerAdmin($username,$email,$password)
 	{
 
 		$dbh = DB();
@@ -27,8 +27,8 @@ class Business{
 		$current_date = date("Y-m-d");
 		
 		$hashed = password_hash($password,PASSWORD_BCRYPT);
-		$stmt = $dbh->prepare("INSERT INTO admin(mobile,address,email,password,register_date) VALUES(?,?,?,?,?)");
-		$stmt->execute([$mobile,$address,$validated_email,$hashed,$current_date]);
+		$stmt = $dbh->prepare("INSERT INTO admin(username,email,password,register_date) VALUES(?,?,?,?)");
+		$stmt->execute([$username,$validated_email,$hashed,$current_date]);
 		$inserted = $stmt->rowCount();
 		if ($inserted>0) {
 			return true;
@@ -80,7 +80,7 @@ class Business{
 	public function loginAdmin($userInput,$password)
 	{
 		$dbh = DB();
-		$stmt = $dbh->prepare("SELECT id,company,email,password,verified FROM admin WHERE company=:input or email=:input");
+		$stmt = $dbh->prepare("SELECT id,username,email,password FROM admin WHERE username=:input or email=:input");
 
 		$stmt->execute(["input" => $userInput]);
 		$data = $stmt->fetch(PDO::FETCH_ASSOC);
