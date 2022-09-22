@@ -22,7 +22,7 @@ if (isset($_POST['signup'])) {
 
 		if ($admin_id==1) {
 
-	$msg = '<div class="alert alert-success" role="alert">Registration successful.Check your email to activate your account</div>';
+	$msg = '<div class="alert alert-success" role="alert">Registration successful.Visit login page and login to homepage</div>';
 
 			// $ch->sendEmail($email);
       // $ch->welcomeMessage($email);
