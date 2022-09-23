@@ -480,16 +480,16 @@ class Business{
 	}
 
 	// inventory
-	public function addItem($itemNumber,$itemName,$status,$quantity,$price,$stock,$discount,
-		$description)
+	// products
+	public function addItem($product,$status,$quantity,$price,$category,$description)
 	{
 		$dbh = DB();
 		$itemID = rand();
 
 		
 
-	$stmt = $dbh->prepare("INSERT INTO item(itemNumber,itemName,status,quantity,price,stock,discount,description,itemID) VALUES(?,?,?,?,?,?,?,?,?)");
-	$stmt->execute([$itemNumber,$itemName,$status,$quantity,$price,$stock,$discount,$description,$itemID]);
+	$stmt = $dbh->prepare("INSERT INTO item(itemName,status,quantity,price,category,description,itemID) VALUES(?,?,?,?,?,?,?)");
+	$stmt->execute([$product,$status,$quantity,$price,$category,$description,$itemID]);
 	$inserted = $stmt->rowCount();
 	if($inserted>0){
 		return true;
@@ -498,6 +498,29 @@ class Business{
 	}
 
 }
+
+public function getItems()
+	{
+		$dbh = DB();
+		$stmt = $dbh->prepare("SELECT * FROM item");
+		$stmt->execute();
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $data;
+		
+
+	}
+
+
+	public function getSortedItem()
+	{
+		$dbh = DB();
+		$stmt = $dbh->prepare("SELECT * FROM item LIMIT 1");
+		$stmt->execute();
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $data;
+
+	}
+	// end of items
 
 		// Suppliers
 		public function addSupplier($name,$address,$email,$contact,$current_date)
@@ -581,27 +604,7 @@ class Business{
 		// }
 
 
-	public function getItems()
-	{
-		$dbh = DB();
-		$stmt = $dbh->prepare("SELECT * FROM item");
-		$stmt->execute();
-		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-		return $data;
-		
-
-	}
-
-
-	public function getSortedItem()
-	{
-		$dbh = DB();
-		$stmt = $dbh->prepare("SELECT * FROM item LIMIT 1");
-		$stmt->execute();
-		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-		return $data;
-
-	}
+	
 
 	
 	

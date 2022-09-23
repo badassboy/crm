@@ -198,103 +198,47 @@ if(isset($_POST['customer'])){
             <!-- <h2>Contact</h2> -->
 
             <div class="container appointment show" id="one">
-              <!-- <div id="message"></div> -->
-              <?php
-                if(isset($msg)){
-                  echo $msg;
-                }
+              <?php include("itemsection.php"); ?>
+
+               <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Product</th>
+                <th scope="col">Status</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
+                <th scope="col">Category</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <?php 
+
+              $suppliers = $ch->getItems();
+              foreach ($suppliers as $row) {
+                
               ?>
-                <h5>Contact</h5>
-               <form method="post" id="appoint">
+                
+              <tr id="delete<?php echo $row['id']; ?>">
+                  <td><?php echo $row['id']; ?></td>
+                  <td><?php echo $row['itemName']; ?></td>
+                  <td><?php echo $row['status']; ?></td>
+                  <td><?php echo $row['quantity'];?></td>
+                  <td><?php echo $row['price']; ?></td>
+                  <td><?php echo $row['category']; ?></td>
+                  <td><button onclick="deleteSupplier(<?php echo $row['id']; ?>)">Delete</button></td>
+            </tr>
+                
+              <?php } ?>
 
-                <div class="row">
+             
+          </tbody>
+          </table>
+             
 
-                    <div class="col">
-                       <div class="form-group">
-                    <label for="exampleFormControlInput1" class="control-label">Item Number</label>
-<input type="text" name="item_number" class="form-control"  placeholder="Item Number" required>
-                  </div> 
-                    </div>
-
-                    <div class="col">
-                            <div class="form-group">
-                  <label for="exampleFormControlInput1" class="control-label">Item Name</label>
-      <input type="text" name="item_name" class="form-control" placeholder="Item Name" required>
-                            </div>  
-                  </div>
-
-
-                   <div class="col">
-                            <div class="form-group">
-                  <label for="exampleFormControlInput1">Status</label>
-                          <select class="form-control" name="product_status">
-                            <option value="Available">Available</option>
-                            <option value="Not Available">Not Available</option>
-                            
-                          </select>
-     
-                            </div>  
-                  </div>
-
-
-                    
-                </div>
-
-                <div class="row">
-
-                    <div class="col">
-                       <div class="form-group">
-                    <label for="exampleFormControlInput1" class="control-label">Quantity</label>
-    <input type="text"  name="quantity" id="product_quantity" class="form-control" placeholder="Quantity" required>
-                  </div> 
-                    </div>
-
-                    <div class="col">
-                        <div class="form-group">
-                <label for="exampleFormControlInput1" class="control-label">Unit Price</label>
-    <input type="text"  name="price" class="form-control"  placeholder="Unit Price" required>
-              </div>
-                    </div>
-
-                     <div class="col">
-                        <div class="form-group">
-                <label for="exampleFormControlInput1" class="control-label">Total Stock</label>
-    <input type="text"  name="stock" class="form-control" id="product_stock"  placeholder="Total Stock" readonly>
-              </div>
-                    </div>
-                    
-
-                </div>
-
-                <div class="row">
-
-                    <div class="col">
-                         <div class="form-group">
-                <label for="exampleFormControlInput1">Discount</label>
-    <input type="text" name="discount" class="form-control"  placeholder="Doscount">
-              </div> 
-                    </div>
-
-                    <!--  <div class="col">
-                         <div class="form-group">
-                <label for="exampleFormControlInput1">Product Image</label>
-                 <input type="file" name="photo" class="form-control-file">
-   
-              </div> 
-                    </div> -->
-
-
-                    <div class="col">
-                          <div class="form-group">
-                <label for="exampleFormControlInput1">Description</label>
-<textarea class="form-control" name="description" rows="3"></textarea>
-  
-              </div>
-                    </div>
-                    
-                </div>
-<button type="submit" class="btn btn-primary" name="laliga">Submit</button>
-               </form> 
+              
             </div>
             <!-- end of adding item -->
 
@@ -495,126 +439,12 @@ if(isset($_POST['customer'])){
 
               <!-- sales -->
              <div class="container sales" id="five">
-
-                          <?php
-                            if(isset($sales)){
-                              echo $sales;
-                            }
-
-                            $current_date = date("Y-m-d");
+              <?php include("salesrecords.php"); ?>
 
 
-                          ?>
-                            <h5>Sales</h5>
-                           <form method="post">
-
-                            <div class="row">
-
-                          <div class="col">
-                            <div class="form-group">
-                    <label for="exampleFormControlInput1" class="control-label">Item Name</label>
-                    <select class="form-control" name="item_name" required>
-                        <?php 
-
-                        $Items = $ch->getItems();
-                        foreach ($Items as $row) {
-                            echo '
-
-                            <option>'.$row['itemName'].'</option>
-                            ';
-                        }
-
-                        ?>
-                     
-                    </select>
-
-                  </div>
-                        </div>
-
-                                 <div class="col">
-                                      <div class="form-group">
-                            <label class="control-label">Sales Date</label>
-    <input type="text" name="sales_date" class="form-control" value="<?php echo $current_date;?>" readonly>
-
-                          </div>
-                                </div>
-
-                                <div class="col">
-                                   <div class="form-group">
-                                <label for="exampleFormControlInput1">Total Stock</label>
-            <input type="text" name="total_stock" class="form-control"  placeholder="TotalStock" readonly>
-                              </div> 
-                                </div>
-
-
-
-                               <!--  <div class="col">
-                                  <div class="form-group">
-                                      <label for="exampleFormControlInput1">CustomerID</label>
-      <input type="text" name="customerID" class="form-control" placeholder="CustomerID" required>
-                                    </div>  
-
-                                </div> -->
-                                
-                            </div>
-
-                            <div class="row">
-
-                               <!--  <div class="col">
-                                   <div class="form-group">
-                                <label for="exampleFormControlInput1">Customer Name</label>
-                <input type="text"  name="customer_name" class="form-control" placeholder="Customer Name" required>
-                              </div> 
-                                </div> -->
-
-                               
-
-
-                                
-                            </div>
-
-                            <div class="row">
-
-                                <div class="col">
-                                     <div class="form-group">
-                            <label for="exampleFormControlInput1">Discount</label>
-    <input type="text" class="form-control" name="discount"  id="discount"  placeholder="Discount">
-                          </div> 
-                                </div>
-
-                                <div class="col">
-                                     <div class="form-group">
-                            <label for="exampleFormControlInput1" class="control-label">Quantity</label>
-        <input type="number" min="1" class="form-control" name="quantity"  id="quantity">
-                          </div> 
-                                </div>
-
-                                <div class="col">
-                                     <div class="form-group">
-                            <label for="exampleFormControlInput1" class="control-label">Unit Price</label>
-    <input type="number" min="1" class="form-control" name="price"  id="pricing"  placeholder="Unit Price">
-                          </div> 
-                                </div>
-
-                               
-
-
-
-                                 <div class="col">
-                                     <div class="form-group">
-                            <label for="exampleFormControlInput1" class="control-label">Total Cost</label>
-    <input type="number" class="form-control" name="total" placeholder="Total" id="total" readonly>
-                          </div> 
-                                </div>
-
-                               
-
-                            </div>
-
-              
-    <button type="submit" name="sales" class="btn btn-primary">Submit</button>
-                           </form> 
-                        </div>
+                        
+                           
+            </div>
             <!-- sales -->
 
 
