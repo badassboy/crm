@@ -656,12 +656,12 @@ public function getItems()
 	}
 
 
-	public function sales($itemName,$discount,$quantity,$price,$salesDate,$salesCost)
+	public function sales($customer,$salesDate,$payment,$category,$product,$quantity,$unit_price)
 	{
 		$dbh = DB();
 		$saleID = rand();
-		$stmt = $dbh->prepare("INSERT INTO sales(itemName,discount,quantity,price,salesDate,sales_cost,saleID) VALUES(?,?,?,?,?,?,?)");
-		$stmt->execute([$itemName,$discount,$quantity,$price,$salesDate,$salesCost,$saleID]);
+		$stmt = $dbh->prepare("INSERT INTO sales(customer,salesDate,payment,category,itemName,quantity,price,saleID) VALUES(?,?,?,?,?,?,?,?)");
+		$stmt->execute([$customer,$salesDate,$payment,$category,$product,$quantity,$unit_price,$saleID]);
 		$inserted = $stmt->rowCount();
 		if($inserted>0){
 			return true;
@@ -714,15 +714,12 @@ public function getItems()
 	}
 
 
-
-
-
-	public function customer($fullName,$status,$phone,$email,$address,$city,$vendor_date)
+	public function customer($fullName,$phone,$whatsapp,$email,$location,$current_date)
 	{
 		$dbh = DB();
 		$custID = rand();
-		$stmt = $dbh->prepare("INSERT INTO customer(fullName,status,phone,email,address,city,cust_date,customerID) VALUES(?,?,?,?,?,?,?,?)");
-		$stmt->execute([$fullName,$status,$phone,$email,$address,$city,$vendor_date,$custID]);
+		$stmt = $dbh->prepare("INSERT INTO customer(fullName,phone,whatsapp,email,location,cust_date,customerID) VALUES(?,?,?,?,?,?,?)");
+		$stmt->execute([$fullName,$phone,$whatsapp,$email,$location,$current_date,$custID]);
 		$inserted = $stmt->rowCount();
 		if($inserted>0){
 			return true;

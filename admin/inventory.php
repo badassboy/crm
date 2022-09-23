@@ -6,31 +6,31 @@ $ch = new Business();
 $dbh = DB();
 
 
-if(isset($_POST['laliga'])){
-    $itemNumber = $ch->testInput($_POST['item_number']);
-    $itemName = $ch->testInput($_POST['item_name']);
-    $product_status = $ch->testInput($_POST['product_status']);
-    $quantity = $ch->testInput($_POST['quantity']);
-    $price = $ch->testInput($_POST['price']);
-    $total_stock = $ch->testInput($_POST['stock']);
-    $discount = $ch->testInput($_POST['discount']);
-    // $product_image = $_FILES['photo']['name'];
-    $description = $ch->testInput($_POST['description']);
-  // var_dump($picture);
+// if(isset($_POST['laliga'])){
+//     $itemNumber = $ch->testInput($_POST['item_number']);
+//     $itemName = $ch->testInput($_POST['item_name']);
+//     $product_status = $ch->testInput($_POST['product_status']);
+//     $quantity = $ch->testInput($_POST['quantity']);
+//     $price = $ch->testInput($_POST['price']);
+//     $total_stock = $ch->testInput($_POST['stock']);
+//     $discount = $ch->testInput($_POST['discount']);
+//     // $product_image = $_FILES['photo']['name'];
+//     $description = $ch->testInput($_POST['description']);
+//   // var_dump($picture);
   
 
-  if(empty($itemNumber) || empty($itemName) || empty($quantity) || empty($price)){
-    $msg = '<div class="alert alert-danger" role="alert">Please all fields are required</div>';
-  }else {
-    $laliga = $ch->addItem($itemNumber,$itemName,$product_status,$quantity,$price,$total_stock,$discount,$description);
-    if($laliga){
-      $msg = '<div class="alert alert-success" role="alert">Item uploaded</div>';
-    }else {
-      $msg = '<div class="alert alert-danger" role="alert">Failed in uploading item</div>';
-    }
-  }
+//   if(empty($itemNumber) || empty($itemName) || empty($quantity) || empty($price)){
+//     $msg = '<div class="alert alert-danger" role="alert">Please all fields are required</div>';
+//   }else {
+//     $laliga = $ch->addItem($itemNumber,$itemName,$product_status,$quantity,$price,$total_stock,$discount,$description);
+//     if($laliga){
+//       $msg = '<div class="alert alert-success" role="alert">Item uploaded</div>';
+//     }else {
+//       $msg = '<div class="alert alert-danger" role="alert">Failed in uploading item</div>';
+//     }
+//   }
 
-}
+// }
 // end of adding contact
 
 
@@ -441,6 +441,48 @@ if(isset($_POST['customer'])){
              <div class="container sales" id="five">
               <?php include("salesrecords.php"); ?>
 
+              <table class="table">
+            <thead>
+              <tr>
+                <!-- <th scope="col">ID</th> -->
+                <th scope="col">SalesID</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Product</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
+                <th scope="col">Date</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <?php 
+
+              $suppliers = $ch->getSales();
+              foreach ($suppliers as $row) {
+                
+              ?>
+                
+              <tr id="delete<?php echo $row['id']; ?>">
+                  <td><?php echo $row['saleID']; ?></td>
+                  <td><?php echo $row['customer']; ?></td>
+                  <td><?php echo $row['itemName']; ?></td>
+                  <td><?php echo $row['quantity']; ?></td>
+                  <td><?php echo $row['price'];?></td>
+                 
+                  <td><?php echo $row['salesDate']; ?></td>
+
+                  <td>
+                    <button onclick="deleteSupplier(<?php echo $row['id']; ?>)">Delete</button>
+                  </td>
+            </tr>
+                
+              <?php } ?>
+          </tbody>
+          </table>
+
+
+
 
                         
                            
@@ -527,92 +569,60 @@ if(isset($_POST['customer'])){
 
             <!-- customers -->
             <div class="container customer" id="six">
+              <?php include("customers_records.php"); ?>
 
-                          <?php
-                            if(isset($info)){
-                              echo $info;
-                            }
-                          ?>
-                            <h5>Customers</h5>
-                           <form method="post">
+              <!-- sales records table -->
+                  <table class="table">
+                <thead>
+                  <tr>
+                    <!-- <th scope="col">ID</th> -->
+                    <th scope="col">CustomerID</th>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Whatsapp</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
 
-                            <div class="row">
+                  <?php 
 
-                                <div class="col">
-                                   <div class="form-group">
-                                <label for="exampleFormControlInput1" class="control-label">FullName</label>
-            <input type="text" name="cust_name" class="form-control"  placeholder="FullName" required>
-                              </div> 
-                                </div>
+                  $suppliers = $ch->getCustomers();
+                  foreach ($suppliers as $row) {
+                    
+                  ?>
+                    
+                  <tr id="delete<?php echo $row['id']; ?>">
+                      <td><?php echo $row['customerID']; ?></td>
+                      <td><?php echo $row['fullName']; ?></td>
+                      <td><?php echo $row['phone']; ?></td>
+                      <td><?php echo $row['whatsapp']; ?></td>
+                      <td><?php echo $row['email'];?></td>
+                      <td><?php echo $row['location'];?></td>
+                     
+                      <td><?php echo $row['cust_date']; ?></td>
 
-                                <div class="col">
-                                  <div class="form-group">
-                              <label for="exampleFormControlInput1" class="control-label">Phone</label>
-                  <input type="text" name="cust_phone" class="form-control" placeholder="Phone" required>
-                                    </div>  
-
-                                </div>
-
-                                <div class="col">
-                                  <div class="form-group">
-                              <label for="exampleFormControlInput1">Status</label>
-                              <select class="form-control" name="status">
-                                <option value="Available">Available</option>
-                                <option value="Not Available">Not Available</option>
-                                
-                              </select>
-                                    </div>  
-
-                                </div>
-
-
-                                
-                            </div>
-
-                            <div class="row">
-
-                                <div class="col">
-                                   <div class="form-group">
-                          <label for="exampleFormControlInput1" class="control-label">Email</label>
-                <input type="email"  name="cust_email" class="form-control" placeholder="Email" required>
-                              </div> 
-                                </div>
-
-                                <div class="col">
-                                    <div class="form-group">
-                      <label for="exampleFormControlInput1" class="control-label">Address</label>
-    <input type="text"  name="cust_address" class="form-control"  placeholder="Address" required>
-                          </div>
-                                </div>
+                      <td>
+                        <button onclick="deleteSupplier(<?php echo $row['id']; ?>)">Delete</button>
+                      </td>
+                </tr>
+                    
+                  <?php } ?>
+              </tbody>
+              </table>
 
 
-                                
-                            </div>
+                        
 
-                            <div class="row">
-
-                                <div class="col">
-                                     <div class="form-group">
-                            <label for="exampleFormControlInput1">City</label>
-                <input type="text" name="cust_city" class="form-control"  placeholder="City">
-                          </div> 
-                                </div>
-
-                                <div class="col">
-                                      <div class="form-group">
-                            <label for="exampleFormControlInput1" class="control-label">Date</label>
-                <input type="date" name="cust_date" class="form-control"  placeholder="">
-
-                          </div>
-                                </div>
-
-                            </div>
+                            
 
               
                                 
-            <button type="submit" class="btn btn-primary" name="customer">Submit</button>
-                           </form> 
-                        </div>
+                          
+              </div>
             <!-- customers -->
 
 

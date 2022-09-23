@@ -15,21 +15,21 @@
 
         <div id="response"></div>
 
-      <form method="post" id="supply" action="suppliers.php">
+      <form method="post" id="supply" action="salesarena.php">
 
          <div class="row">
 
           <div class="col">
             <div class="form-group">
               <label>Customer</label>
-              <select class="form-control" name="item_name" required>
+              <select class="form-control" name="customer" required>
                         <?php 
 
                         $Items = $ch->getCustomers();
                         foreach ($Items as $row) {
                             echo '
 
-                            <option>'.$row['itemName'].'</option>
+                            <option>'.$row['fullName'].'</option>
                             ';
                         }
 
@@ -42,26 +42,7 @@
             
           </div>
 
-                          <div class="col">
-                            <div class="form-group">
-                    <label for="exampleFormControlInput1" class="control-label">Item Name</label>
-                    <select class="form-control" name="item_name" required>
-                        <?php 
-
-                        $Items = $ch->getItems();
-                        foreach ($Items as $row) {
-                            echo '
-
-                            <option>'.$row['itemName'].'</option>
-                            ';
-                        }
-
-                        ?>
-                     
-                    </select>
-
-                  </div>
-                        </div>
+                        
 
                                  <div class="col">
                                       <div class="form-group">
@@ -82,7 +63,7 @@
                                <div class="col">
                                      <div class="form-group">
                             <label for="exampleFormControlInput1" class="control-label">Payment</label>
-                            <select class="form-control" id="exampleFormControlSelect1">
+                            <select class="form-control" name="payment" id="exampleFormControlSelect1">
                               <option>Momo</option>
                               <option>Cash</option>
                               <option>Bank Transfer</option>
@@ -98,14 +79,14 @@
                                 <div class="col">
                                      <div class="form-group">
                             <label for="exampleFormControlInput1">Category</label>
-                            <select class="form-control" id="exampleFormControlSelect1">
+                            <select class="form-control" name="category" id="exampleFormControlSelect1">
                              <?php 
 
                         $Items = $ch->getCategories();
                         foreach ($Items as $row) {
                             echo '
 
-                            <option>'.$row['itemName'].'</option>
+                            <option>'.$row['cat_name'].'</option>
                             ';
                         }
 
@@ -120,7 +101,20 @@
                                 <div class="col">
                                      <div class="form-group">
                             <label for="exampleFormControlInput1" class="control-label">Product Name</label>
-    <input type="text" min="1" class="form-control" name="product_name"  id=""  placeholder="Product Name">
+                             <select class="form-control" name="product" id="exampleFormControlSelect1">
+                             <?php 
+
+                                $Items = $ch->getItems();
+                                foreach ($Items as $row) {
+                                    echo '
+
+                                    <option>'.$row['itemName'].'</option>
+                                    ';
+                                }
+
+                                ?>
+                          </select>
+
                           </div> 
                                 </div>
 
@@ -141,17 +135,11 @@
 
                                         
 
-                                          <div class="col">
-                                               <div class="form-group">
-                                      <label for="exampleFormControlInput1">Unit Price</label>
-                  <input type="number" min="1" class="form-control" name="unit_price"  id="quantity">
-                                    </div> 
-                                          </div>
 
                                           <div class="col">
                                                <div class="form-group">
-                                      <label for="exampleFormControlInput1" class="control-label">Unit Price</label>
-              <input type="number" min="1" class="form-control" name="price"  id="pricing"  placeholder="Unit Price">
+                                      <label for="exampleFormControlInput1">Unit Price</label>
+              <input type="text" class="form-control" name="unit_price"  id="pricing"  placeholder="Unit Price" disabled>
                                     </div> 
                                           </div>
 
