@@ -81,3 +81,24 @@ input[type=text],input[type=email],input[type=password],input[type=tel]{
 	padding-left: 10%;
 	font-size: 17px;
 }
+
+@media (max-width: 400px){
+	
+
+	.second {
+		width: 90%;
+	}
+
+	input[type=text],input[type=email],input[type=password],input[type=tel]{
+	width: 80%;
+	margin-top: 2%;
+}
+
+form {
+	margin-top: 2%;
+}
+
+
+
+	
+}

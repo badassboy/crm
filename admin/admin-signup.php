@@ -13,6 +13,7 @@ if (isset($_POST['signup'])) {
 	$email = $ch->testInput($_POST['email']);
 	$password = $ch->testInput($_POST['password']);
 	
+	
 
 
 	if (!empty($company) || !empty($password) || !empty($email) || !empty($address)) {
@@ -57,73 +58,9 @@ if (isset($_POST['signup'])) {
 	
 	<title></title>
 	<link rel="stylesheet" type="text/css" href="bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/register.css">
 
-	<style type="text/css">
-
-		.signup_page {
-			background-color:#f5f5f5;
-			height: 800px; 
-		}
-
-		.signup_page h3 {
-			text-align: center;
-			padding-top: 1%;
-		}
-
-		header {
-			background-color:#ffffff;
-			width: 100%;
-			height: 60px;
-		}
-
-		header h2 {
-			padding-top: 1%;
-			padding-left: 4%;
-		}
-
-		.signup_form {
-			width: 60%;
-			height: 650px;
-			background-color:rgb(255, 255, 255);
-			margin: 1% auto;
-		}
-
-
-		input[type=text],input[type=password],input[type=tel],input[type=email]{
-			width: 60%;
-			margin-top: -1%;
-		}
-
-		form {
-			margin-top: 3%;
-			margin-left: 20%;
-			padding-top: 4%;
-		}
-
-		.default {
-			background-color: green;
-			color: white;
-			width: 60%;
-			height: 40px;
-			border: 1px solid green;
-		}
-
-		form label {
-			padding-top: 2%;
-			font-weight: bold;
-		}
-
-		.auth {
-			padding-top: 3%;
-		}
-
-		.form-group  .control-label:after {
-  			content:"*";
-  			color:red;
-		}
-
-
-	</style>
+	
 
 </head>
 <body>
@@ -157,10 +94,7 @@ if (isset($_POST['signup'])) {
 				  </div>
 
 
-				
-
-
-		<div class="form-group">
+			<div class="form-group">
 		    <label class="control-label">Address</label>
 		    <input type="text" name="address" class="form-control"  placeholder="Address" required="required">
 		  </div>
@@ -173,10 +107,7 @@ if (isset($_POST['signup'])) {
 				    </div>
 
 
-				
-
-
-				 <div class="row">
+				<div class="row">
 
 				 	<div class="col">
 				 		<div class="form-group">
@@ -185,16 +116,11 @@ if (isset($_POST['signup'])) {
 				</div>
 				 	</div>
 
-				 	
-				 	
-				 </div>
+				</div>
 
 				
 
-
-				
-
-				<button type="submit" name="signup" class="default">Register Admin</button>
+			<button type="submit" name="signup" class="default">Register Admin</button>
 				<p class="auth">Already Registered.<a href="index.php" style="color: #009933"> Login</a></p>
 			</form>
 		</div>

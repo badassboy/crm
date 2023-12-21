@@ -31,11 +31,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	}
 }
 
-
-
-
-
-
 ?> 
 
 
@@ -76,8 +71,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 			    		?>
 			    	  <div class="form-group">
-			    	      <label for="exampleInputEmail1">Company(*)</label>
-			    	      <input type="text" name="username" class="form-control"  placeholder="Company Name">
+			    	      <label for="exampleInputEmail1">Email(*)</label>
+			    	      <input type="text" name="email" class="form-control"  placeholder="Email" required>
 			    	      
 			    	    </div>
 
@@ -96,17 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			    	</form>
 			    </div>
 
-			
-
-
-		
-
-
-	</div>
-
-
-
-
+		</div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script type="text/javascript" src="bootstrap/dist/js/bootstrap.min.js"></script>
