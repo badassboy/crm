@@ -12,7 +12,7 @@ if (isset($_POST['signup'])) {
 	$address = $ch->testInput($_POST['address']);
 	$email = $ch->testInput($_POST['email']);
 	$password = $ch->testInput($_POST['password']);
-	
+
 	
 
 
@@ -25,7 +25,10 @@ if (isset($_POST['signup'])) {
 
 			if ($admin_id==1) {
 
-	$msg = '<div class="alert alert-success" role="alert">Registration successful.</div>';
+				header("Location: index.php");
+				exit();
+
+	    // $msg = '<div class="alert alert-success" role="alert">Registration successful.</div>';
 
 			$ch->sendEmail($email);
 
