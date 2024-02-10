@@ -20,7 +20,7 @@ class Business{
 
 	public function registerAdmin($username,$email,$password)
 	{
-
+		try{
 		$dbh = DB();
 
 		$validated_email = filter_var($email,FILTER_SANITIZE_EMAIL);
@@ -33,30 +33,45 @@ class Business{
 		if ($inserted>0) {
 			return true;
 		}else {
-			return $dbh->errorInfo();
+			return false;
 		}
+
+	}catch(PDOException $ex){
+		return $ex->getMessage();
+	}
 		
 	}
 
 	public function getCompanyDetails()
 	{
-		$db = DB();
-		$stmt = $db->prepare("SELECT * FROM admin");
-		$stmt->execute();
+		try{
+
+			$db = DB();
+		$stmt = $db->query("SELECT * FROM admin");
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		return $data;
+
+		}catch(PDOException $ex){
+			return $ex->getMessage();
+		}
+		
 
 	}
 
 	public function getCustomerDetails($id)
-	{
-		$db = DB();
+	{	
+		try{
+			$db = DB();
 		$stmt = $db->prepare("SELECT contact.location, contact.mobile
 			FROM contact 
 			INNER JOIN invoice ON contact.company = invoice.company WHERE invoice.id = ?");
 		$stmt->execute([$id]);
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		return $data;
+		}catch(PDOException $ex){
+			return $ex->getMessage();
+		}
+		
 
 	}
 
@@ -64,11 +79,16 @@ class Business{
 
 	public function getUserDate($user)
 	{
-		$dbh = DB();
+		try{
+			$dbh = DB();
 		$stmt = $dbh->prepare("SELECT register_date FROM admin WHERE username =?");
 		$stmt->execute([$user]);
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		return $data;
+	}catch(PDOException $ex){
+		return $ex->getMessage();
+	}
+		
 	}
 
 
@@ -264,11 +284,30 @@ class Business{
 	}
 
 
-	public function service($title,$status,$duration,$price,$location,$description)
+	// Add services info
+	public function serviceInfo(array $serviceArray)
 	{
-		$dbs = DB();
+		// Validate input array keys to avoid potential issues
+    $requiredKeys = ['title', 'status', 'duration', 'price', 'location', 'description'];
+    foreach ($requiredKeys as $key) {
+        if (!array_key_exists($key, $serviceArray)) {
+            // Handle missing key error here
+            return false;
+        }
+    }
 
-		
+		// get key fields from the array
+		$title = $serviceArray['title'];
+		$status = $serviceArray['status'];
+		$duration = $serviceArray['duration'];
+		$price = $serviceArray['price'];
+		$location = $serviceArray['location'];
+		$description = $serviceArray['description'];
+
+		try{
+
+			$dbs = DB();
+
 	$stmt = $dbs->prepare("INSERT INTO service(title,status,duration,rate,location,description) VALUES(?,?,?,?,?,?)");
 	$stmt->execute(array($title,$status,$duration,$price,$location,$description));
 	$inserted = $stmt->rowCount();
@@ -278,60 +317,78 @@ class Business{
 		return false;
 	}
 
-}
+		}catch(PDOException $ex){
+			return $ex->getMessage();
+		}
+	
 
-	public function displayAdvert()
+}
+	
+	// shows all services info
+	public function displayServiceInfo()
 	{
-		$db = DB();
-		$stmt = $db->prepare("SELECT * FROM advert");
-		$stmt->execute();
+		try{
+			$db = DB();
+		$stmt = $db->query("SELECT * FROM service");
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		return $data;
+	}catch(PDOException $ex){
+		return $ex->getMessage();
+	}
 		
 	}
 
-	public function addContact($firstName,$middlename,$lastName,$company,$email,$secondary_email,$status,
-		$phone,$mobile,$whatsapp,$address,$location,$source_lead)
-	{
+	public function addContact(array $contactArray)
+	{	
 
-		$db=DB();
-		// validate input
-		if (!preg_match("/^[a-zA-Z-' ]*$/",$firstName)) {
-			echo '<div class="alert alert-danger" role="alert">Only letters and white space allowed</div>';
-		}elseif(!preg_match("/^[a-zA-Z-' ]*$/",$lastName)){
-			echo '<div class="alert alert-danger" role="alert">Only letters and white space allowed</div>';
-		}elseif (!filter_var($email,FILTER_VALIDATE_EMAIL)) {
-			echo '<div class="alert alert-danger" role="alert">Invalid Email</div>';
-		}elseif (strlen($mobile)<10) {
-			echo '<div class="alert alert-danger" role="alert">Incorrect mobile Number</div>';
-			
-		}else{
-			// insert data after all validation is passed
+		$firstName = $contactArray['firstName'];
+		$middleName = $contactArray['middle_name'];
+		$lastName = $contactArray['last_name'];
+		$company = $contactArray['company'];
+		$email = $contactArray['email'];
+		$status = $contactArray['status'];
+	
+		$mobile = $contactArray['mobile'];
+		$whatsapp = $contactArray['whatsapp'];
+		$location = $contactArray['location'];
+		$source = $contactArray['source'];
+
+
+		try{
+
+			$db=DB();
+
+		
+		// insert data after all validation is passed
 			$stmt =$db->prepare("INSERT INTO contact(firstName,middle_name,lastName,company,email,
-				secondary_email,status,phone,mobile,whatsapp,address,location,source_lead) 
-			VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)");
-			$stmt->execute([$firstName,$middlename,$lastName,$company,$email,$secondary_email,$status,
-		$phone,$mobile,$whatsapp,$address,$location,$source_lead]);
+				status,mobile,whatsapp,location,source_lead) 
+			VALUES(?,?,?,?,?,?,?,?,?,?)");
+			$stmt->execute([$firstName,$middleName,$lastName,$company,$email,$status,
+		$mobile,$whatsapp,$location,$source]);
 			$inserted = $stmt->rowCount();
-			if ($inserted>0) {
+			if ($inserted>0){
 				return true;
-			}else{
+			}else {
 				return false;
 			}
 
+		}catch(PDOException $ex){
+			return $ex->getMessage();
 		}
-
 
 	}
 
 	public function allContact()
 	{
-		$db= DB();
-		$stmt=$db->prepare("SELECT * FROM contact");
-		$stmt->execute();
+		try{
+			$db= DB();
+		$stmt=$db->query("SELECT * FROM contact");
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		return $data;
+	}catch(PDOException $ex){
+		return $ex->getMessage();
 	}
+  }
 
 	public function addNote($note,$id)
 	{
@@ -590,29 +647,7 @@ public function getItems()
 
 		}
 
-		// public function deleteSupplier($id)
-		// {
-		// 	$dbh = DB();
-		// 	$stmt = $dbh->prepare("DELETE FROM suppliers WHERE id = ?");
-		// 	$stmt->execute([$id]);
-		// 	$data = $stmt->rowCount();
-		// 	if ($data>0) {
-		// 		return true;
-		// 	}else {
-		// 		return false;
-		// 	}
-		// }
-
-
-	
-
-	
-	
-
-	
-
-
-
+		
 
 	public function purchase($itemNumber,$itemName,$quantity,$price,$purchaseDate,$vendor,$currentStock)
 	{
@@ -748,10 +783,14 @@ public function getItems()
 	}
 	// inventory
 
+
+
+
 	//lead generation
 	public function leads($fullName,$title,$phone,$lead_source,$industry,$email,$company,$rating)
 	{
-		$dbh = DB();
+		try{
+			$dbh = DB();
 		$stmt = $dbh->prepare("INSERT INTO leads(fullName,title,phone,lead_source,industry,email,company,rating) VALUES(?,?,?,?,?,?,?,?)");
 		$stmt->execute([$fullName,$title,$phone,$lead_source,$industry,$email,$company,$rating]);
 		$data = $stmt->rowCount();
@@ -760,6 +799,24 @@ public function getItems()
 		}else {
 			return false;
 		}
+	}catch(PDOException $ex){
+		return $ex->getMessage();
+	}
+		
+	}
+
+	// show all leads info
+	public function displayLeads(){
+		try{
+			$dbh = DB();
+		$stmt = $dbh->query("SELECT * FROM leads");
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $data;
+	}catch(PDOException $ex){
+		return $ex->getMessage();
+	}
+		
+		
 	}
 
 	public function deleteLead($id)
@@ -792,6 +849,18 @@ public function getItems()
 		}
 	}
 
+	public function displayDeals(){
+		try{
+			$dbh = DB();
+		$stmt = $dbh->query("SELECT * FROM deals");
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $data;
+	}catch(PDOException $ex){
+		return $ex->getMessage();
+	}
+		
+	}
+
 	public function deleteDeals($id)
 	{
 		$dbh = DB();
@@ -822,6 +891,18 @@ public function getItems()
 		}
 	}
 
+	public function displayTask(){
+		try{
+			$dbh = DB();
+		$stmt = $dbh->query("SELECT * FROM task");
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $data;
+	}catch(PDOException $ex){
+		return $ex->getMessage();
+	}
+
+	}
+
 	public function deleteTask($id)
 	{
 		$dbh = DB();
@@ -836,12 +917,14 @@ public function getItems()
 
 	}
 
-	public function meeting($title,$service,$location,$address,$assigned_member,$meeting_date,$from,$to,$related)
+	public function meeting($title,$service,$location,$assigned_member,$meeting_date,$from,$to,$related)
 	{
-		$dbh = DB();
-		$stmt = $dbh->prepare("INSERT INTO meeting(title,service,location,address,assigned_member,meeting_date,meeting_start,meeting_end,related) 
-			VALUES(?,?,?,?,?,?,?,?,?)");
-		$stmt->execute([$title,$service,$location,$address,$assigned_member,$meeting_date,$from,$to,$related]);
+		try{
+
+			$dbh = DB();
+		$stmt = $dbh->prepare("INSERT INTO meeting(title,service,location,assigned_member,meeting_date,meeting_start,meeting_end,related) 
+			VALUES(?,?,?,?,?,?,?,?)");
+		$stmt->execute([$title,$service,$location,$assigned_member,$meeting_date,$from,$to,$related]);
 		$data = $stmt->rowCount();
 		if ($data>0) {
 			return true;
@@ -849,6 +932,22 @@ public function getItems()
 			return false;
 		}
 
+	}catch(PDOException $ex){
+		return $ex->getMessage();
+	}
+		
+
+	}
+
+	public function displayMeeting(){
+		try{
+			$dbh = DB();
+		$stmt = $dbh->query("SELECT * FROM meeting");
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $data;
+	}catch(PDOException $ex){
+		return $ex->getMessage();
+	}
 	}
 
 	public function deleteMeeting($id)

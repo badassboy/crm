@@ -22,10 +22,10 @@ if (isset($_POST['signup'])) {
 
 		if ($admin_id==1) {
 
-	$msg = '<div class="alert alert-success" role="alert">Registration successful.Visit login page and login to homepage</div>';
+      header("Location: login.php");
+      exit();
 
-			// $ch->sendEmail($email);
-      // $ch->welcomeMessage($email);
+	
 
 		}else{
 				$msg = '<div class="alert alert-danger" role="alert">Error in creating account</div>';

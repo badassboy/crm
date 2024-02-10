@@ -13,7 +13,7 @@ if(isset($_POST['laliga'])){
     $status = $ch->testInput($_POST['status']);
     $priority = $ch->testInput($_POST['priority']);
     $description = $ch->testInput($_POST['description']);
-  // var_dump($picture);
+  
   
 
 $laliga = $ch->task($subject,$dueDate,$assigned_member,$task_start_time,
@@ -303,11 +303,29 @@ if (isset($_POST['send'])) {
                 <th scope="col">Date</th>
                 <th scope="col">Status</th>
                 <th scope="col">Priority</th>
+                <th scope="col">Assigned To</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
 
-            <tbody></tbody>
+            <tbody>
+                <?php 
+                $task = $ch->displayTask();
+                foreach ($task as $row) {
+                    // code...
+                
+
+                ?>
+                <tr>
+                    <td><?php echo $row['subject']; ?></td>
+                    <td><?php echo $row['dueDate']; ?></td>
+                    <td><?php echo $row['status']; ?></td>
+                    <td><?php echo $row['priority']; ?></td>
+                    <td><?php echo $row['assigned_member']; ?></td>
+                    <!-- <td><?php echo $row['subject']; ?></td> -->
+                </tr>
+            <?php } ?>
+            </tbody>
 
             </table>
               

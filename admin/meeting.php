@@ -295,16 +295,31 @@ if (isset($_POST['send'])) {
             <thead>
               <tr>
                 
-                <th scope="col">Subject</th>
+                <th scope="col">Assigned To</th>
                 <th scope="col">Date</th>
-                <th scope="col">Status</th>
-                <th scope="col">Priority</th>
-                <th scope="col">Related</th>
+                <th scope="col">Title</th>
+                <th scope="col">Service</th>
+                <th scope="col">Location</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
 
-            <tbody></tbody>
+            <tbody>
+                <?php
+                $info = $ch->displayMeeting();
+                foreach ($info as $row) {
+                    
+                ?>
+                <tr>
+                    <td><?php echo $row['assigned_member']; ?></td>
+                    <td><?php echo $row['meeting_date']; ?></td>
+                    <td><?php echo $row['title']; ?></td>
+                    <td><?php echo $row['service']; ?></td>
+                    <td><?php echo $row['location']; ?></td>
+                </tr>
+                
+            <?php } ?>
+            </tbody>
 
             </table>
               

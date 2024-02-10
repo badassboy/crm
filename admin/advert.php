@@ -1,39 +1,3 @@
-<?php
-
-include("../functions.php");
-$ch = new Business();
-
-if(isset($_POST['laliga'])){
-    $title = $ch->testInput($_POST['title']);
-    $status = $ch->testInput($_POST['status']);
-    $duration = $ch->testInput($_POST['duration']);
-    $pricing = $ch->testInput($_POST['price']);
-    $location = $ch->testInput($_POST['location']);
-    $description = $ch->testInput($_POST['service_desc']);
-    
- 
-  
-
-  if(empty($title) || empty($status) || empty($duration) || empty($pricing) || empty($location)){
-    $msg = '<div class="alert alert-danger" role="alert">Please all fields are required</div>';
-  }else {
-    $laliga = $ch->service($title,$status,$duration,$pricing,$location,$description);
-    if($laliga){
-      $msg = '<div class="alert alert-success" role="alert">Services uploaded</div>';
-    }else {
-      $msg = '<div class="alert alert-danger" role="alert">Failed in uploading service</div>';
-    }
-  }
-
-}
-// end of laliga news
-
-
-
-?>
-
-
-
 <!DOCTYPE html>
 <html>
 
@@ -146,84 +110,8 @@ if(isset($_POST['laliga'])){
             <h2>Services</h2>
 
             <div class="container appointment show" id="one">
-              <!-- <div id="message"></div> -->
-              <?php
-                if(isset($msg)){
-                  echo $msg;
-                }
-              ?>
-               
-               <form method="post" id="appoint">
-
-                <div class="row">
-
-                    <div class="col">
-                        <div class="form-group">
-                    <label for="exampleFormControlInput1" class="control-label">Service Name</label>
-        <input type="text" name="title" class="form-control"  placeholder="Service Name" required>
-                  </div> 
-                    </div>
-
-                    <div class="col">
-                        <div class="form-group">
-                            <label>Status</label>
-                             <select class="form-control" name="status">
-                              <option>Select</option>
-                              <option value="active">Active</option>
-                              <option value="inactive">Inactive</option>
-                              
-                            </select>
-
-                            
-                        </div>
-
-                    </div>
-                    
-                </div>
-
-               
-
-                  <div class="form-group">
-                      <label for="exampleFormControlInput1" class="control-label">Duration</label>
-          <input type="text" name="duration" class="form-control"  placeholder="Duration" required>
-                    </div>
-
-                    <div class="row">
-
-                        <div class="col">
-                            <div class="form-group">
-                    <label for="exampleFormControlInput1" class="control-label">Base Price</label>
-        <input type="number" min="1" name="price" class="form-control"  placeholder="Price" required>
-                  </div> 
-                        </div>
-
-                        <div class="col">
-                            <div class="form-group">
-                <label for="exampleFormControlInput1" class="control-label">Location</label>
-    <input type="text"  name="location" class="form-control" placeholder="Location" required>
-              </div> 
-                        </div>
-                        
-                    </div>
-
-    <div class="form-group">
-        <label>Service Description</label>
-     <textarea class="form-control" name="service_desc" rows="3" placeholder="Description"></textarea>
-        
-    </div>
-        
-
-               
-
-           
-
-
-
-           
-
-                
-                <button type="submit" class="btn btn-primary" name="laliga">Submit</button>
-               </form> 
+             
+             <?php include("servicesform.php"); ?>
             </div>
 
                    
@@ -237,14 +125,34 @@ if(isset($_POST['laliga'])){
               <tr>
                 
                 <th scope="col">Title</th>
-                <th scope="col">Venue</th>
-                <th scope="col">Amount</th>
-                <th scope="col">Days</th>
+                <th scope="col">Status</th>
+                <th scope="col">Duration</th>
+                <th scope="col">Price</th>
+                <th scope="col">Location</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
 
-            <tbody></tbody>
+            <tbody>
+                <?php
+
+                $services = $ch->displayServiceInfo();
+                foreach ($services as $row) {
+                    // code...
+                
+
+                ?>
+
+                <tr>
+                    <td><?php echo $row['title']; ?></td>
+                    <td><?php echo $row['status']; ?></td>
+                    <td><?php echo $row['duration']; ?></td>
+                    <td><?php echo $row['rate']; ?></td>
+                    <td><?php echo $row['location']; ?></td>
+
+                <?php } ?>
+                </tr>
+            </tbody>
 
             </table>
               
@@ -298,56 +206,7 @@ if(isset($_POST['laliga'])){
                document.getElementById(id).classList.add('show');
         }
 
-        // display all featured news
-        $(document).ready(function(){
-
-$.ajax({
- url:"advert_ajax.php",
- type:"get",
- dataType:"JSON",
- success:function(response){
-   console.log(response);
-     var len = response.length;
-     for (var i = 0; i < len; i++) {
-
-           var edit = response[i]['edit'];
-         var my_delete  = response[i]["delete"];
-
-         var action = edit.concat(" ", my_delete);
-
-         var id = response[i]["id"];
-
-         var title = response[i]["title"];
-
-         var venue = response[i]["venue"];
        
-         var  amount = response[i]["amount"];
-         var  days = response[i]["days"];
-
-         var table_str = "<tr>" +
-                      
-                      
-                      "<td>" + title + "</td>" +
-                      "<td>" + venue + "</td>" +
-                    
-                      "<td>" + amount + "</td>" +
-                      "<td>" + days + "</td>" +
-                      "<td>" + action + "</td>" +
-                      "</tr>";
-
-
-              $(".table tbody").append(table_str);
-
-            }
-             
-          },
-          error:function(response){
-            console.log("Error: "+ response);
-          }
-      
-          });  
-
-      });
 
     var button = document.getElementById("upload");
     button.addEventListener("click", function(){

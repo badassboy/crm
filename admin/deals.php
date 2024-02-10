@@ -297,7 +297,28 @@ if (isset($_POST['send'])) {
               </tr>
             </thead>
 
-            <tbody></tbody>
+            <tbody>
+                
+                <?php
+
+                $info = $ch->displayDeals();
+                foreach ($info as $row) {
+                    // code...
+                
+
+                ?>
+
+                <tr>
+                    <td><?php echo $row['dealName']; ?></td>
+                    <td><?php echo $row['contactName']; ?></td>
+                    <td><?php echo $row['dealType']; ?></td>
+                    <td><?php echo $row['deal_source']; ?></td>
+                    <td><?php echo $row['revenue']; ?></td>
+                    <td><?php echo $row['closing_date']; ?></td>
+                </tr>
+
+            <?php } ?>
+            </tbody>
 
             </table>
               
