@@ -22,7 +22,7 @@
         <li><a class="" href="#">CloudsoftCRM</a></li>
         <li><a class="" href="#">Executive Profile</a></li>
         <li><a class="" href="#">Press Release</a></li>
-        <li><a class="" href="#">Privacy Policy</a></li>
+        <li><a class="" href="privacy.php">Privacy Policy</a></li>
         
       </ul>
     </div>
